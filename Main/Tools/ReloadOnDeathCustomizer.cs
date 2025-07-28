@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using Il2CppSLZ.Marrow;
+using MelonLoader;
 using UnityEngine;
 
 namespace PowerTools.Tools
@@ -31,22 +32,22 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var reloadOnDeathCustomizer = Main.Category.CreateCategory("Reload On Death Customizer", "#ff6f00");
+            var reloadOnDeathCustomizer = Main.Category.CreatePage("Reload On Death Customizer", Color.green);
 
-            reloadOnDeathCustomizer.CreateBoolElement("Mod Toggle", Color.yellow, ReloadOnDeathCustomizerIsEnabled, OnSetEnabled);
-            reloadOnDeathCustomizer.CreateBoolElement("Reload Level On Death", "#ff3700", ReloadLevel, ReloadOnDeathSetter);
+            reloadOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, ReloadOnDeathCustomizerIsEnabled, OnSetEnabled);
+            reloadOnDeathCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel, ReloadOnDeathSetter);
         }
 
         public static void ReloadOnDeathSetter(bool value)
         {
             if (!IsDefaultSet)
             {
-                _defaultReloadOnDeathSettingValue = BoneLib.Player.rigManager.openControllerRig.playerHealth.reloadLevelOnDeath;
+                _defaultReloadOnDeathSettingValue = (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath;
                 IsDefaultSet = true;
             }
-            if (BoneLib.Player.rigManager != null && ReloadOnDeathCustomizerIsEnabled)
+            if (BoneLib.Player.RigManager != null && ReloadOnDeathCustomizerIsEnabled)
             {
-                BoneLib.Player.rigManager.openControllerRig.playerHealth.reloadLevelOnDeath = value;
+                (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath = value;
             }
             MelonPrefReloadLevelOnDeath.Value = value;
             Main.MelonPrefCategory.SaveToFile(false);
@@ -57,7 +58,7 @@ namespace PowerTools.Tools
             ReloadOnDeathCustomizerIsEnabled = value;
             if (!value)
             {
-                BoneLib.Player.rigManager.openControllerRig.playerHealth.reloadLevelOnDeath = _defaultReloadOnDeathSettingValue;
+                (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath = _defaultReloadOnDeathSettingValue;
             }
             else
             {

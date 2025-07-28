@@ -1,4 +1,4 @@
-﻿using BoneLib.BoneMenu.Elements;
+﻿using BoneLib.BoneMenu;
 using MelonLoader;
 using UnityEngine;
 // ReSharper disable AccessToModifiedClosure
@@ -23,38 +23,38 @@ namespace PowerTools.Tools
         
         public static void BoneMenuCreator()
         {
-            var gravityCustomizer = Main.Category.CreateCategory("Gravity Adjuster", "#4555ed");
+            var gravityCustomizer = Main.Category.CreatePage("Gravity Adjuster", Color.green);
         
-            gravityCustomizer.CreateBoolElement("Mod Toggle", Color.yellow, _isEnabled, OnSetEnabled);
+            gravityCustomizer.CreateBool("Mod Toggle", Color.green, _isEnabled, OnSetEnabled);
 
             //100% a better way to do this but I don't feel like doing it
             FloatElement one = null;
             FloatElement ten = null;
             
-            var pointOne = gravityCustomizer.CreateFloatElement("Gravity Value (0.1)", "#cc51fc", _gravity, 0.1f, -25f, 25f, (r) =>
+            var pointOne = gravityCustomizer.CreateFloat("Gravity Value (0.1)", Color.green, _gravity, 0.1f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
                 Main.MelonPrefCategory.SaveToFile(false);
                 _gravity = r;
-                one?.SetValue(r);
-                ten?.SetValue(r);
+                one.Value = r;
+                ten.Value = r;
                 GravityAdjust();
             });
-            one = gravityCustomizer.CreateFloatElement("Gravity Value (1)", "#cc51fc", _gravity, 1f, -25f, 25f, (r) =>
+            one = gravityCustomizer.CreateFloat("Gravity Value (1)", Color.green, _gravity, 1f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
                 Main.MelonPrefCategory.SaveToFile(false);
-                pointOne?.SetValue(r);
-                ten?.SetValue(r);
+                pointOne.Value = r;
+                ten.Value = r;
                 _gravity = r;
                 GravityAdjust();
             });
-            ten = gravityCustomizer.CreateFloatElement("Gravity Value (5)", "#cc51fc", _gravity, 5f, -25f, 25f, (r) =>
+            ten = gravityCustomizer.CreateFloat("Gravity Value (5)", Color.green, _gravity, 5f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
                 Main.MelonPrefCategory.SaveToFile(false);
-                pointOne?.SetValue(r);
-                one?.SetValue(r);
+                pointOne.Value=r;
+                one.Value=r;
                 _gravity = r;
                 GravityAdjust();
             });

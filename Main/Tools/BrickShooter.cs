@@ -1,27 +1,26 @@
 ﻿using BoneLib;
 using MelonLoader;
-using SLZ.Rig;
 using UnityEngine;
 
 namespace PowerTools.Tools
 {
     public class BrickShooter
     {
-        public static void dfgijkhokjnhgrshjikhjiusgihuseg()
+        public static void BrickShooterStart()
         {
-            if (Player.rigManager == null)
+            if (Player.RigManager == null)
             {
                 Debug.Log("Player.rigManager is null");
                 return;
             }
 
-            if (Player.rigManager.gameObject.transform == null)
+            if (Player.RigManager.gameObject.transform == null)
             {
                 Debug.Log("Player.rigManager.gameObject is null");
                 return;
             }
 
-            Camera headObject = Player.rigManager.GetComponentInChildren<Camera>();
+            Camera headObject = Player.RigManager.GetComponentInChildren<Camera>();
 
             if (headObject == null)
             {

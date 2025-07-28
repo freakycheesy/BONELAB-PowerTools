@@ -21,15 +21,15 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var ragdollOnDeathCustomizer = Main.Category.CreateCategory("Ragdoll On Death", "#00fc82");
+            var ragdollOnDeathCustomizer = Main.Category.CreatePage("Ragdoll On Death", Color.green);
 
-            ragdollOnDeathCustomizer.CreateBoolElement("Mod Toggle", Color.yellow, RagdollOnDeathIsEnabled, OnSetEnabled);
+            ragdollOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, RagdollOnDeathIsEnabled, OnSetEnabled);
         }
 
 
         public static void OnSetEnabled(bool value)
         {
-            BoneLib.Player.rigManager.health._testRagdollOnDeath = value;
+            BoneLib.Player.RigManager.health._testRagdollOnDeath = value;
             RagdollOnDeathIsEnabled = value;
             MelonPrefEnabled.Value = value;
             Main.MelonPrefCategory.SaveToFile(false);

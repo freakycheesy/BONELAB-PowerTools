@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using Il2CppSLZ.Marrow;
+using MelonLoader;
 using UnityEngine;
 
 namespace PowerTools.Tools
@@ -29,10 +30,10 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var deathTimeCustomizer = Main.Category.CreateCategory("Death Time Customizer", "#FC221b");
+            var deathTimeCustomizer = Main.Category.CreatePage("Death Time Customizer", Color.green);
 
-            deathTimeCustomizer.CreateBoolElement("Mod Toggle", Color.yellow, DeathTimeCustomizerIsEnabled, OnSetEnabled);
-            deathTimeCustomizer.CreateFloatElement("Death Time", "#FC221b", _deathTime, 1f, 0f, 100f, (dt) =>
+            deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, DeathTimeCustomizerIsEnabled, OnSetEnabled);
+            deathTimeCustomizer.CreateFloat("Death Time", Color.green, _deathTime, 1f, 0f, 100f, (dt) =>
             {
                 _deathTime = dt;
                 MelonPrefDeathTime.Value = dt;
@@ -40,11 +41,12 @@ namespace PowerTools.Tools
                 DeathTimeSetter();
             });
         }
+        
         public static void DeathTimeSetter()
         {
-            if (BoneLib.Player.rigManager != null && DeathTimeCustomizerIsEnabled)
+            if (BoneLib.Player.RigManager != null && DeathTimeCustomizerIsEnabled)
             {
-                BoneLib.Player.rigManager.openControllerRig.playerHealth.deathTimeAmount = _deathTime;
+                (BoneLib.Player.RigManager.health as Player_Health).deathTimeAmount = _deathTime;
             }
         }
 
@@ -52,7 +54,7 @@ namespace PowerTools.Tools
         {
             if (!value)
             {
-                BoneLib.Player.rigManager.openControllerRig.playerHealth.deathTimeAmount = 3;
+                (BoneLib.Player.RigManager.health as Player_Health).deathTimeAmount = 3;
             }
             DeathTimeCustomizerIsEnabled = value;
             MelonPrefEnabled.Value = value;

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
+using Il2CppSLZ.Marrow;
 using MelonLoader;
-using SLZ.Rig;
+using UnityEngine;
 
 namespace PowerTools.Tools
 {
@@ -23,9 +24,9 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var vaultingToggle = Main.Category.CreateCategory("Vaulting Toggle", "#7526fc"); 
+            var vaultingToggle = Main.Category.CreatePage("Vaulting Toggle", Color.green); 
 
-            vaultingToggle.CreateBoolElement("Vaulting", "#6d45ff", VaultingToggleIsEnabled, OnSetEnabled);
+            vaultingToggle.CreateBool("Vaulting", Color.green, VaultingToggleIsEnabled, OnSetEnabled);
         }
         
         public static bool Prefix(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE

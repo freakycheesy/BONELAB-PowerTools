@@ -1,7 +1,7 @@
 ﻿using BoneLib;
 using BoneLib.BoneMenu;
-using BoneLib.BoneMenu.Elements;
 using MelonLoader;
+using MelonLoader.Utils;
 using PowerTools.Tools;
 using System.IO;
 using UnityEngine;
@@ -10,15 +10,15 @@ namespace PowerTools
 {
     internal partial class Main : MelonMod
     {
-        public static MenuCategory Category;
+        public static Page Category;
 
         public static MelonPreferences_Category MelonPrefCategory { get; private set; }
 
-        public static readonly string PowerToolsPath = Path.Combine(MelonUtils.UserDataDirectory, "PowerTools");
+        public static readonly string PowerToolsPath = Path.Combine(MelonEnvironment.UserDataDirectory, "PowerTools");
 
         public override void OnInitializeMelon()
         {
-            Hooking.OnLevelInitialized += (_) => { OnSceneAwake(); };
+            Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             MelonPrefCategory = MelonPreferences.CreateCategory("Power Tools");
             
             DeathTimeCustomizer.MelonPreferencesCreator();
@@ -38,7 +38,7 @@ namespace PowerTools
             InfiniteAmmo.MelonPreferencesCreator();
 
 
-            Category = MenuManager.CreateCategory(
+            Category = Page.Root.CreatePage(
                 "<color=#00FF72>P</color>" +
                 "<color=#00FF80>o</color>" +
                 "<color=#00FF8D>w</color>" +
@@ -49,8 +49,7 @@ namespace PowerTools
                 "<color=#00FFC3>o</color>" +
                 "<color=#00FFCC>o</color>" +
                 "<color=#00FFD4>l</color>" +
-                "<color=#00FFD4>s</color>",
-                Color.white);
+                "<color=#00FFD4>s</color>", Color.white);
             DeathTimeCustomizer.BoneMenuCreator();
             
             ReloadOnDeathCustomizer.BoneMenuCreator();

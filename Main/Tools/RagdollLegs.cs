@@ -25,8 +25,8 @@ namespace PowerTools.Tools
         }
         public static void BoneMenuCreator()
         {
-            var ragdollLegs = Main.Category.CreateCategory("Ragdoll Legs", "#ffa040");
-            ragdollLegs.CreateBoolElement("Mod Toggle", Color.yellow, _isEnabled, OnSetEnabled);
+            var ragdollLegs = Main.Category.CreatePage("Ragdoll Legs", Color.green);
+            ragdollLegs.CreateBool("Mod Toggle", Color.green, _isEnabled, OnSetEnabled);
 
         }
         private static void OnSetEnabled(bool value)
@@ -34,11 +34,11 @@ namespace PowerTools.Tools
             _isEnabled = value;
             if (value)
             {
-                Player.physicsRig.PhysicalLegs();
+                Player.PhysicsRig.PhysicalLegs();
             }
             else
             {
-                Player.physicsRig.UnRagdollRig();
+                Player.PhysicsRig.UnRagdollRig();
             }
         }
         private static bool _isEnabled;

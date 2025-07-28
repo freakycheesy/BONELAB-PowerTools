@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using Il2CppSLZ.Interaction;
+using MelonLoader;
 using UnityEngine;
 
 namespace PowerTools.Tools
@@ -25,11 +26,11 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var deathTimeCustomizer = Main.Category.CreateCategory("Button Disabler ", Color.yellow);
+            var deathTimeCustomizer = Main.Category.CreatePage("Button Disabler ", Color.green);
 
-            deathTimeCustomizer.CreateBoolElement("Mod Toggle", Color.yellow, ButtonDisablerIsEnabled, OnSetEnabled);
+            deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, ButtonDisablerIsEnabled, OnSetEnabled);
 
-            deathTimeCustomizer.CreateBoolElement("Disable Next Level Button", "#ff9900", _endOfLevelButton, OnEndOfLevelButtonEnabled);
+            deathTimeCustomizer.CreateBool("Disable Next Level Button", Color.green, _endOfLevelButton, OnEndOfLevelButtonEnabled);
         }
         public static void DisableButtons()
         {
@@ -42,7 +43,7 @@ namespace PowerTools.Tools
                     for (int i = 0; i < obj.childCount; i++)
                     {
                         Transform child = obj.GetChild(i);
-                        SLZ.Interaction.ButtonToggle buttonToggle = child.GetComponent<SLZ.Interaction.ButtonToggle>();
+                        var buttonToggle = child.GetComponent<ButtonToggle>();
                         if (buttonToggle != null && ButtonDisablerIsEnabled)
                         {
                             if (_endOfLevelButton)

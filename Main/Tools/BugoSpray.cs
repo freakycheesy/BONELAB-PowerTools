@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using TMPro;
+using Il2CppTMPro;
 
 namespace PowerTools.Tools
 {

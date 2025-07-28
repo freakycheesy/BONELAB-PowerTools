@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections;
-using BoneLib;
-using BoneLib.Nullables;
+﻿using BoneLib;
 using HarmonyLib;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.Data;
 using MelonLoader;
-using SLZ.Data;
-using SLZ.Interaction;
-using SLZ.Marrow.Data;
-using SLZ.Marrow.Pool;
-using SLZ.Marrow.Warehouse;
-using SLZ.Player;
-using SLZ.Props.Weapons;
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace PowerTools.Tools
 {
@@ -70,12 +61,12 @@ namespace PowerTools.Tools
         }
         public static void BoneMenuCreator()
         {
-            var infiniteAmmo = Main.Category.CreateCategory("Infinite Ammo", "#45ed53");
-            infiniteAmmo.CreateBoolElement("Infinite Ammo", "#f2ff3b", InfiniteAmmoIsEnabled, OnSetEnabled);
-            infiniteAmmo.CreateBoolElement("Give ammo when mag can't be full", "#ff3700", GiveAmmoWhenEmpty, OnGiveAmmoWhenEmpty);
-            infiniteAmmo.CreateBoolElement("Auto Chamber", "#CD5C5C", AutoChamber, OnAutoChamber);
-            infiniteAmmo.CreateBoolElement("Auto Load Guns", "#ff5436", GiveAmmoWhenEmpty, OnGiveAmmoWhenEmpty);
-            infiniteAmmo.CreateBoolElement("Infinite Mags", "#DAA520", InfiniteMags, OnInfiniteMags);
+            var infiniteAmmo = Main.Category.CreatePage("Infinite Ammo", Color.green);
+            infiniteAmmo.CreateBool("Infinite Ammo", Color.green, InfiniteAmmoIsEnabled, OnSetEnabled);
+            infiniteAmmo.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty, OnGiveAmmoWhenEmpty);
+            infiniteAmmo.CreateBool("Auto Chamber", Color.green, AutoChamber, OnAutoChamber);
+            infiniteAmmo.CreateBool("Auto Load Guns", Color.green, GiveAmmoWhenEmpty, OnGiveAmmoWhenEmpty);
+            infiniteAmmo.CreateBool("Infinite Mags", Color.green, InfiniteMags, OnInfiniteMags);
         }
 
         private static void OnSetEnabled(bool value)
@@ -133,22 +124,22 @@ namespace PowerTools.Tools
             {
                 if (InfiniteAmmoIsEnabled && GiveAmmoWhenEmpty)
                 {
-                    var light = Player.rigManager.AmmoInventory.GetCartridgeCount("light");
+                    var light = AmmoInventory.Instance.GetCartridgeCount("light");
                     if (light <= 0)
                     {
-                        Bankruptcy(Player.rigManager.AmmoInventory.lightAmmoGroup);
+                        Bankruptcy(AmmoInventory.Instance.lightAmmoGroup);
                     }
 
-                    var medium = Player.rigManager.AmmoInventory.GetCartridgeCount("medium");
+                    var medium = AmmoInventory.Instance.GetCartridgeCount("medium");
                     if (medium <= 0)
                     {
-                        Bankruptcy(Player.rigManager.AmmoInventory.mediumAmmoGroup);
+                        Bankruptcy(AmmoInventory.Instance.mediumAmmoGroup);
                     }
 
-                    var heavy = Player.rigManager.AmmoInventory.GetCartridgeCount("heavy");
+                    var heavy = AmmoInventory.Instance.GetCartridgeCount("heavy");
                     if (heavy <= 25)
                     {
-                        Bankruptcy(Player.rigManager.AmmoInventory.heavyAmmoGroup);
+                        Bankruptcy(AmmoInventory.Instance.heavyAmmoGroup);
                     }
                 }
             }
@@ -156,7 +147,7 @@ namespace PowerTools.Tools
 
             private static void Bankruptcy(AmmoGroup group)
             {
-                Player.rigManager.AmmoInventory.AddCartridge(group, 1);
+                AmmoInventory.Instance.AddCartridge(group, 1);
             }
         }
 
@@ -167,12 +158,12 @@ namespace PowerTools.Tools
                 {
                     if (InfiniteAmmoIsEnabled && GiveAmmoWhenEmpty)
                     {
-                        var leftMag = Player.GetComponentInHand<Magazine>(Player.leftHand);
-                        var rightMag = Player.GetComponentInHand<Magazine>(Player.rightHand);
+                        var leftMag = Player.GetComponentInHand<Magazine>(Player.LeftHand);
+                        var rightMag = Player.GetComponentInHand<Magazine>(Player.RightHand);
                         if (leftMag != null)
                         {
                             int leftMagMax = leftMag.magazineState.magazineData.rounds;
-                            int leftCartridgeCount = Player.rigManager.AmmoInventory.GetCartridgeCount(leftMag.magazineState.cartridgeData);
+                            int leftCartridgeCount = AmmoInventory.Instance.GetCartridgeCount(leftMag.magazineState.cartridgeData);
                             if (leftCartridgeCount < leftMagMax)
                             {
                                 BankStatement(leftMag, leftMagMax, leftCartridgeCount);
@@ -183,7 +174,7 @@ namespace PowerTools.Tools
                         {
                             int rightMagMax = rightMag.magazineState.magazineData.rounds;
                             int rightCartridgeCount =
-                                Player.rigManager.AmmoInventory.GetCartridgeCount(rightMag.magazineState.cartridgeData);
+                                AmmoInventory.Instance.GetCartridgeCount(rightMag.magazineState.cartridgeData);
                             if (rightCartridgeCount < rightMagMax)
                             {
                                 BankStatement(rightMag, rightMagMax, rightCartridgeCount);
@@ -193,28 +184,28 @@ namespace PowerTools.Tools
                 }
                 private static void BankStatement(Magazine mag, int magMax, int cartridgeCount)
                     {
-                        if (Player.rigManager.AmmoInventory.GetCartridgeCount("light") == cartridgeCount)
+                        if (AmmoInventory.Instance.GetCartridgeCount("light") == cartridgeCount)
                         {
-                            Loan(mag, Player.rigManager.AmmoInventory.lightAmmoGroup, magMax);
+                            Loan(mag, AmmoInventory.Instance.lightAmmoGroup, magMax);
                         }
-                        else if (Player.rigManager.AmmoInventory.GetCartridgeCount("medium") == cartridgeCount)
+                        else if (AmmoInventory.Instance.GetCartridgeCount("medium") == cartridgeCount)
                         {
-                            Loan(mag, Player.rigManager.AmmoInventory.mediumAmmoGroup, magMax);
+                            Loan(mag, AmmoInventory.Instance.mediumAmmoGroup, magMax);
                         }
-                        else if (Player.rigManager.AmmoInventory.GetCartridgeCount("heavy") == cartridgeCount)
+                        else if (AmmoInventory.Instance.GetCartridgeCount("heavy") == cartridgeCount)
                         {
-                            Loan(mag, Player.rigManager.AmmoInventory.heavyAmmoGroup, magMax);
+                            Loan(mag, AmmoInventory.Instance.heavyAmmoGroup, magMax);
                         }
 
                     }
 
                     private static void Loan(Magazine mag, AmmoGroup group, int amount)
                     {
-                        if (Player.rigManager.AmmoInventory.GetCartridgeCount(group.KeyName) == 1)
+                        if (AmmoInventory.Instance.GetCartridgeCount(group.KeyName) == 1)
                         {
-                            Player.rigManager.AmmoInventory.AddCartridge(group, -1);
+                            AmmoInventory.Instance.AddCartridge(group, -1);
                         }
-                        Player.rigManager.AmmoInventory.AddCartridge(group, amount);
+                        AmmoInventory.Instance.AddCartridge(group, amount);
                         mag.magazineState.Refill();
                     }
         }
@@ -260,7 +251,7 @@ namespace PowerTools.Tools
                 
                 if (InfiniteAmmoIsEnabled && AutoLoad && !__instance._hasMagState)
                 {
-                    __instance.InstantLoad();
+                    __instance.InstantLoadAsync();
                 }
             }
             
@@ -272,7 +263,7 @@ namespace PowerTools.Tools
             {
                 if (InfiniteAmmoIsEnabled && AutoLoad && !__instance._hasMagState)
                 {
-                    __instance.InstantLoad();
+                    __instance.InstantLoadAsync();
                 }
             }
         }
