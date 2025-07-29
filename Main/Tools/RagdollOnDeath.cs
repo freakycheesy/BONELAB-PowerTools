@@ -19,7 +19,7 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var ragdollOnDeathCustomizer = Main.Category.CreatePage("Ragdoll On Death", Color.green);
+            var ragdollOnDeathCustomizer = Main.Player.CreatePage("Ragdoll On Death", Color.green);
 
             ragdollOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, RagdollOnDeathIsEnabled.Value, OnSetEnabled);
         }

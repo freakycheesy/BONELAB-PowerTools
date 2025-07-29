@@ -20,7 +20,7 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var vaultingToggle = Main.Category.CreatePage("Vaulting Toggle", Color.green); 
+            var vaultingToggle = Main.Player.CreatePage("Vaulting Toggle", Color.green); 
 
             vaultingToggle.CreateBool("Vaulting", Color.green, VaultingToggleIsEnabled.Value, OnSetEnabled);
         }

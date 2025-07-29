@@ -47,7 +47,7 @@ namespace PowerTools.Tools {
             MidasTouch = Main.MelonPrefCategory.CreateEntry("MidasTouch", false);
         }
         public static void BoneMenuCreator() {
-            var infiniteAmmo = Main.Category.CreatePage("Infinite Ammo", Color.green);
+            var infiniteAmmo = Main.Game.CreatePage("Infinite Ammo", Color.green);
             infiniteAmmo.CreateBool("Infinite Ammo", Color.green, InfAmmo.Value, OnSetEnabled);
             infiniteAmmo.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
             infiniteAmmo.CreateBool("Auto Chamber", Color.green, AutoChamber.Value, OnAutoChamber);

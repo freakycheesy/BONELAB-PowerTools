@@ -10,14 +10,16 @@ namespace PowerTools
 {
     internal partial class Main : MelonMod
     {
-        public static Page Category;
+        private static Page Category;
+        public static Page Player;
+        public static Page Game;
+
 
         public static MelonPreferences_Category MelonPrefCategory { get; private set; }
 
         public static readonly string PowerToolsPath = Path.Combine(MelonEnvironment.UserDataDirectory, "PowerTools");
 
-        public override void OnInitializeMelon()
-        {
+        public override void OnInitializeMelon() {
             Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             MelonPrefCategory = MelonPreferences.CreateCategory("Power Tools");
 
@@ -33,24 +35,29 @@ namespace PowerTools
                 "<color=#00FFCC>o</color>" +
                 "<color=#00FFD4>l</color>" +
                 "<color=#00FFD4>s</color>", Color.white);
+            Player = Category.CreatePage("Player", Color.green);
+            Game = Category.CreatePage("Game", Color.green);
+
+            StartTools();
+        }
+
+        private static void StartTools() {
             DeathSettings.Start();
-            
-            ReloadOnDeathCustomizer.Start();
-            
+
             ButtonDisabler.Start();
-            
+
             RagdollOnDeath.Start();
-            
+
             VaultingToggle.Start();
-            
+
             GravityAdjuster.Start();
-            
+
             //Loadouts.Start();
-            
+
             InfiniteAmmo.Start();
-            
+            PlayerMovement.Start();
+
             RagdollLegs.Start();
-            
         }
 
         private static void OnSceneAwake()
@@ -58,9 +65,6 @@ namespace PowerTools
             DeathSettings.DeathTimeSetter();
             
             ButtonDisabler.DisableButtons();
-
-            ReloadOnDeathCustomizer.IsDefaultSet = false;
-            ReloadOnDeathCustomizer.ReloadOnDeathSetter(ReloadOnDeathCustomizer.ReloadLevel.Value);
             
             RagdollOnDeath.OnSetEnabled(RagdollOnDeath.RagdollOnDeathIsEnabled.Value);
             

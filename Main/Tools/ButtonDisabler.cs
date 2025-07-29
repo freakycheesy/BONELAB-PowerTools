@@ -20,7 +20,7 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
-            var deathTimeCustomizer = Main.Category.CreatePage("Button Disabler ", Color.green);
+            var deathTimeCustomizer = Main.Game.CreatePage("Button Disabler ", Color.green);
 
             deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, ButtonDisablerIsEnabled.Value, OnSetEnabled);
 

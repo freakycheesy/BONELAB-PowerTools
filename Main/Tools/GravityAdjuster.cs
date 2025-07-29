@@ -26,7 +26,7 @@ namespace PowerTools.Tools
         
         public static void BoneMenuCreator()
         {
-            var gravityCustomizer = Main.Category.CreatePage("Gravity Adjuster", Color.green);
+            var gravityCustomizer = Main.Game.CreatePage("Gravity Adjuster", Color.green);
         
             gravityCustomizer.CreateBool("Mod Toggle", Color.green, _isEnabled, OnSetEnabled);
 

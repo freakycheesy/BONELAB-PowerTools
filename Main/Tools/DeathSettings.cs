@@ -1,4 +1,8 @@
-﻿using Il2CppSLZ.Marrow;
+﻿using BoneLib;
+using HarmonyLib;
+using Il2CppSLZ.Bonelab;
+using Il2CppSLZ.Marrow;
+using Il2CppSLZ.Marrow.SceneStreaming;
 using MelonLoader;
 using System;
 using UnityEngine;
@@ -7,7 +11,9 @@ namespace PowerTools.Tools
 {
     internal static class DeathSettings
     {
-        public static MelonPreferences_Entry<bool> MelonPrefEnabled { get; set; }
+        public static MelonPreferences_Entry<bool> ReloadLevel {
+            get; set;
+        }
         public static MelonPreferences_Entry<float> MelonPrefDeathTime { get; set; }
 
         public static void Start() {
@@ -17,15 +23,16 @@ namespace PowerTools.Tools
 
         public static void MelonPreferencesCreator()
         {
-            MelonPrefEnabled = Main.MelonPrefCategory.CreateEntry("DeathTimeCustomizerIsEnabled", false);
+            ReloadLevel = Main.MelonPrefCategory.CreateEntry("ReloadLevel", false);
             MelonPrefDeathTime = Main.MelonPrefCategory.CreateEntry("Damage Threshold", 3f);
         }
 
         public static void BoneMenuCreator()
         {
-            var deathTimeCustomizer = Main.Category.CreatePage("Death Settings", Color.green);
+            var deathTimeCustomizer = Main.Player.CreatePage("Death Settings", Color.green);
 
-            deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, MelonPrefEnabled.Value, OnSetEnabled);
+            deathTimeCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, OnSetReloadLevel);
+
             deathTimeCustomizer.CreateFunction("Die", Color.green, OnDie);
             deathTimeCustomizer.CreateFloat("Death Time", Color.green, MelonPrefDeathTime.Value, 1f, 0f, 100f, (dt) =>
             {
@@ -35,26 +42,29 @@ namespace PowerTools.Tools
             });
         }
 
+        public static Player_Health PlayerHealth => Player.RigManager.health as Player_Health;
+
+        private static void OnSetReloadLevel(bool obj) {
+            PlayerHealth.reloadLevelOnDeath = obj;
+        }
+
         private static void OnDie() {
-            BoneLib.Player.RigManager.health.Dying(100);
-            BoneLib.Player.RigManager.health.Death();
+            PlayerHealth.Dying(100);
+            PlayerHealth.Death();
+            PlayerHealth.Respawn();
         }
 
         public static void DeathTimeSetter()
         {
-            if (BoneLib.Player.RigManager != null && MelonPrefEnabled.Value)
-            {
-                (BoneLib.Player.RigManager.health as Player_Health).deathTimeAmount = MelonPrefDeathTime.Value;
-            }
+            PlayerHealth.deathTimeAmount = MelonPrefDeathTime.Value;
         }
 
         private static void OnSetEnabled(bool value)
         {
             if (!value)
             {
-                (BoneLib.Player.RigManager.health as Player_Health).deathTimeAmount = 3;
+                PlayerHealth.deathTimeAmount = 3;
             }
-            MelonPrefEnabled.Value = value;
             MelonPreferences.Save();
         }
     }
