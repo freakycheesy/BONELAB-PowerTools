@@ -565,7 +565,7 @@
     <Compile Include="Tools\BrickShooter.cs" />
     <Compile Include="Tools\BugoSpray.cs" />
     <Compile Include="Tools\ButtonDisabler.cs" />
-    <Compile Include="Tools\DeathTimeCustomizer.cs" />
+    <Compile Include="Tools\DeathSettings.cs" />
     <Compile Include="Tools\GravityAdjuster.cs" />
     <Compile Include="Tools\InfiniteAmmo.cs" />
     <Compile Include="Tools\RagdollLegs.cs" />

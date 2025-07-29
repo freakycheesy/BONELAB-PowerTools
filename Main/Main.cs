@@ -20,23 +20,6 @@ namespace PowerTools
         {
             Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             MelonPrefCategory = MelonPreferences.CreateCategory("Power Tools");
-            
-            DeathTimeCustomizer.MelonPreferencesCreator();
-            
-            ReloadOnDeathCustomizer.MelonPreferencesCreator();
-            
-            ButtonDisabler.MelonPreferencesCreator();
-            
-            RagdollOnDeath.MelonPreferencesCreator();
-            
-            VaultingToggle.MelonPreferencesCreator();
-            
-            //Loadouts.MelonPreferencesCreator(); removed
-            
-            GravityAdjuster.MelonPreferencesCreator();
-            
-            InfiniteAmmo.MelonPreferencesCreator();
-
 
             Category = Page.Root.CreatePage(
                 "<color=#00FF72>P</color>" +
@@ -50,40 +33,45 @@ namespace PowerTools
                 "<color=#00FFCC>o</color>" +
                 "<color=#00FFD4>l</color>" +
                 "<color=#00FFD4>s</color>", Color.white);
-            DeathTimeCustomizer.BoneMenuCreator();
+            DeathSettings.Start();
             
-            ReloadOnDeathCustomizer.BoneMenuCreator();
+            ReloadOnDeathCustomizer.Start();
             
-            ButtonDisabler.BoneMenuCreator();
+            ButtonDisabler.Start();
             
-            RagdollOnDeath.BoneMenuCreator();
+            RagdollOnDeath.Start();
             
-            VaultingToggle.BoneMenuCreator();
+            VaultingToggle.Start();
             
-            GravityAdjuster.BoneMenuCreator();
+            GravityAdjuster.Start();
             
-            //Loadouts.BoneMenuCreator();
+            //Loadouts.Start();
             
-            InfiniteAmmo.BoneMenuCreator();
+            InfiniteAmmo.Start();
             
-            RagdollLegs.BoneMenuCreator();
+            RagdollLegs.Start();
             
         }
 
         private static void OnSceneAwake()
         {
-            DeathTimeCustomizer.DeathTimeSetter();
+            DeathSettings.DeathTimeSetter();
             
             ButtonDisabler.DisableButtons();
 
             ReloadOnDeathCustomizer.IsDefaultSet = false;
-            ReloadOnDeathCustomizer.ReloadOnDeathSetter(ReloadOnDeathCustomizer.ReloadLevel);
+            ReloadOnDeathCustomizer.ReloadOnDeathSetter(ReloadOnDeathCustomizer.ReloadLevel.Value);
             
-            RagdollOnDeath.OnSetEnabled(RagdollOnDeath.RagdollOnDeathIsEnabled);
+            RagdollOnDeath.OnSetEnabled(RagdollOnDeath.RagdollOnDeathIsEnabled.Value);
             
             GravityAdjuster.GravityAdjust();
         }
-        
+
+        public override void OnApplicationQuit() {
+            base.OnApplicationQuit();
+            MelonPreferences.Save();
+        }
+
         public override void OnUpdate() // Only run tools under OnUpdate() if theres no alternatives and if an alternative is found please PR it
         {
             //BugoSpray.BugoRemover(); this is stupid I only made it for a bit

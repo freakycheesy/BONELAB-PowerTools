@@ -7,11 +7,14 @@ namespace PowerTools.Tools
 {
     public abstract class GravityAdjuster
     {
-        private static MelonPreferences_Entry<float> MelonPrefGravityValue { get; set; }
+        public static MelonPreferences_Entry<float> MelonPrefGravityValue { get; set; }
         private static float _gravity = -9.81f;
         //private static float _originalGravity = -9.8f;
         private static bool _isEnabled;
-        
+        public static void Start() {
+            MelonPreferencesCreator();
+            BoneMenuCreator();
+        }
         public static void MelonPreferencesCreator()
         {
             MelonPrefGravityValue = Main.MelonPrefCategory.CreateEntry("Gravity Adjuster Value", 9.81f);
@@ -34,7 +37,7 @@ namespace PowerTools.Tools
             var pointOne = gravityCustomizer.CreateFloat("Gravity Value (0.1)", Color.green, _gravity, 0.1f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
-                Main.MelonPrefCategory.SaveToFile(false);
+                MelonPreferences.Save();
                 _gravity = r;
                 one.Value = r;
                 ten.Value = r;
@@ -43,7 +46,7 @@ namespace PowerTools.Tools
             one = gravityCustomizer.CreateFloat("Gravity Value (1)", Color.green, _gravity, 1f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
-                Main.MelonPrefCategory.SaveToFile(false);
+                MelonPreferences.Save();
                 pointOne.Value = r;
                 ten.Value = r;
                 _gravity = r;
@@ -52,7 +55,7 @@ namespace PowerTools.Tools
             ten = gravityCustomizer.CreateFloat("Gravity Value (5)", Color.green, _gravity, 5f, -25f, 25f, (r) =>
             {
                 MelonPrefGravityValue.Value = r;
-                Main.MelonPrefCategory.SaveToFile(false);
+                MelonPreferences.Save();
                 pointOne.Value=r;
                 one.Value=r;
                 _gravity = r;
@@ -72,6 +75,7 @@ namespace PowerTools.Tools
             {
                 GravityReset();
             }
+            MelonPreferences.Save();
         }
 
         private static void GravityReset()

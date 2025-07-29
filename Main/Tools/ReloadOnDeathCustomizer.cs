@@ -6,26 +6,18 @@ namespace PowerTools.Tools
 {
     public static class ReloadOnDeathCustomizer
     {
-        private static MelonPreferences_Entry<bool> MelonPrefEnabled { get; set; }
-        private static bool ReloadOnDeathCustomizerIsEnabled { get; set; }
-        private static MelonPreferences_Entry<bool> MelonPrefReloadLevelOnDeath { get; set; }
-        public static bool ReloadLevel;
+        public static MelonPreferences_Entry<bool> ReloadOnDeathCustomizerIsEnabled { get; set; }
+        public static MelonPreferences_Entry<bool> ReloadLevel { get; set; }
         public static bool IsDefaultSet { get; set; }
         private static bool _defaultReloadOnDeathSettingValue;
-
+        public static void Start() {
+            MelonPreferencesCreator();
+            BoneMenuCreator();
+        }
         public static void MelonPreferencesCreator()
         {
-            MelonPrefEnabled = Main.MelonPrefCategory.CreateEntry("ReloadOnDeathCustomizerIsEnabled", false);
-            MelonPrefReloadLevelOnDeath = Main.MelonPrefCategory.CreateEntry("Reload Level On Death", false);
-            if (MelonPrefEnabled != null)
-            {
-                ReloadOnDeathCustomizerIsEnabled = MelonPrefEnabled.Value;
-            }
-
-            if (MelonPrefReloadLevelOnDeath != null)
-            {
-                ReloadLevel = MelonPrefReloadLevelOnDeath.Value;
-            }
+            ReloadOnDeathCustomizerIsEnabled = Main.MelonPrefCategory.CreateEntry("ReloadOnDeathCustomizerIsEnabled", false);
+            ReloadLevel = Main.MelonPrefCategory.CreateEntry("Reload Level On Death", false);
         }
 
 
@@ -34,8 +26,8 @@ namespace PowerTools.Tools
         {
             var reloadOnDeathCustomizer = Main.Category.CreatePage("Reload On Death Customizer", Color.green);
 
-            reloadOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, ReloadOnDeathCustomizerIsEnabled, OnSetEnabled);
-            reloadOnDeathCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel, ReloadOnDeathSetter);
+            reloadOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, ReloadOnDeathCustomizerIsEnabled.Value, OnSetEnabled);
+            reloadOnDeathCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, ReloadOnDeathSetter);
         }
 
         public static void ReloadOnDeathSetter(bool value)
@@ -45,28 +37,29 @@ namespace PowerTools.Tools
                 _defaultReloadOnDeathSettingValue = (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath;
                 IsDefaultSet = true;
             }
-            if (BoneLib.Player.RigManager != null && ReloadOnDeathCustomizerIsEnabled)
+            if (BoneLib.Player.RigManager != null && ReloadOnDeathCustomizerIsEnabled.Value)
             {
                 (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath = value;
             }
-            MelonPrefReloadLevelOnDeath.Value = value;
-            Main.MelonPrefCategory.SaveToFile(false);
+            ReloadLevel.Value = value;
+
+
         }
 
         private static void OnSetEnabled(bool value)
         {
-            ReloadOnDeathCustomizerIsEnabled = value;
+            ReloadOnDeathCustomizerIsEnabled.Value = value;
             if (!value)
             {
                 (BoneLib.Player.RigManager.health as Player_Health).reloadLevelOnDeath = _defaultReloadOnDeathSettingValue;
             }
             else
             {
-                ReloadOnDeathSetter(ReloadLevel);
+                ReloadOnDeathSetter(ReloadLevel.Value);
             }
             
-            MelonPrefEnabled.Value = value;
-            Main.MelonPrefCategory.SaveToFile(false);
+            ReloadOnDeathCustomizerIsEnabled.Value = value;
+            MelonPreferences.Save();
         }
     }
 }

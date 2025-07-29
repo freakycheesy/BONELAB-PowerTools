@@ -9,19 +9,15 @@ namespace PowerTools.Tools
     {
         //need to make a melody patch or whatever so it doesn't rest when unragdolling from something like ragdoll mod
         //what did I mean by this top comment??????????????
-        
-        private static bool VaultingToggleIsEnabled { get; set; }
-        private static MelonPreferences_Entry<bool> MelonPrefRagdollLegs { get; set; }
-        
+
+        public static MelonPreferences_Entry<bool> VaultingToggleIsEnabled { get; set; }
+        public static void Start() {
+            MelonPreferencesCreator();
+            BoneMenuCreator();
+        }
         public static void MelonPreferencesCreator()
         {
-            MelonPrefRagdollLegs = Main.MelonPrefCategory.CreateEntry("Vaulting Toggle", true);
-
-            if (MelonPrefRagdollLegs != null)
-            {
-                VaultingToggleIsEnabled = MelonPrefRagdollLegs.Value;
-                OnSetEnabled(VaultingToggleIsEnabled);
-            }
+            VaultingToggleIsEnabled = Main.MelonPrefCategory.CreateEntry("Vaulting Toggle", true);
         }
         public static void BoneMenuCreator()
         {

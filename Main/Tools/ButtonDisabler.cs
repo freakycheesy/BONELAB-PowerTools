@@ -6,31 +6,25 @@ namespace PowerTools.Tools
 {
     internal static class ButtonDisabler
     {
-        private static bool _endOfLevelButton;
-
-        private static MelonPreferences_Entry<bool> MelonPrefEnabled { get;  set; }
-        private static bool ButtonDisablerIsEnabled { get; set; }
-        private static MelonPreferences_Entry<bool> MelonPrefEndOfLevelButton { get; set; }
-
+        public static MelonPreferences_Entry<bool> ButtonDisablerIsEnabled { get;  set; }
+        public static MelonPreferences_Entry<bool> _endOfLevelButton { get; set; }
+        public static void Start() {
+            MelonPreferencesCreator();
+            BoneMenuCreator();
+        }
         public static void MelonPreferencesCreator()
         {
-            MelonPrefEnabled = Main.MelonPrefCategory.CreateEntry("ButtonDisablerIsEnabled", false);
-            ButtonDisablerIsEnabled = MelonPrefEnabled.Value;
-            MelonPrefEndOfLevelButton = Main.MelonPrefCategory.CreateEntry("Disable end of level button", false);
-
-            if (MelonPrefEndOfLevelButton != null)
-            {
-                _endOfLevelButton = MelonPrefEndOfLevelButton.Value;
-            }
+            ButtonDisablerIsEnabled = Main.MelonPrefCategory.CreateEntry("ButtonDisablerIsEnabled", false);
+            _endOfLevelButton = Main.MelonPrefCategory.CreateEntry("Disable end of level button", false);
         }
 
         public static void BoneMenuCreator()
         {
             var deathTimeCustomizer = Main.Category.CreatePage("Button Disabler ", Color.green);
 
-            deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, ButtonDisablerIsEnabled, OnSetEnabled);
+            deathTimeCustomizer.CreateBool("Mod Toggle", Color.green, ButtonDisablerIsEnabled.Value, OnSetEnabled);
 
-            deathTimeCustomizer.CreateBool("Disable Next Level Button", Color.green, _endOfLevelButton, OnEndOfLevelButtonEnabled);
+            deathTimeCustomizer.CreateBool("Disable Next Level Button", Color.green, _endOfLevelButton.Value, OnEndOfLevelButtonEnabled);
         }
         public static void DisableButtons()
         {
@@ -44,13 +38,13 @@ namespace PowerTools.Tools
                     {
                         Transform child = obj.GetChild(i);
                         var buttonToggle = child.GetComponent<ButtonToggle>();
-                        if (buttonToggle != null && ButtonDisablerIsEnabled)
+                        if (buttonToggle != null && ButtonDisablerIsEnabled.Value)
                         {
-                            if (_endOfLevelButton)
+                            if (_endOfLevelButton.Value)
                             {
                                 buttonToggle.enabled = false;
                             }
-                            else if (!_endOfLevelButton)
+                            else if (!_endOfLevelButton.Value)
                             {
                                 if (!child.name.Contains("prop_bigButton_NEXTLEVEL"))
                                 {
@@ -62,7 +56,7 @@ namespace PowerTools.Tools
                                 }
                             }
                         }
-                        else if (buttonToggle != null && !ButtonDisablerIsEnabled)
+                        else if (buttonToggle != null && !ButtonDisablerIsEnabled.Value)
                         {
                             buttonToggle.enabled = true;
                         }
@@ -73,17 +67,17 @@ namespace PowerTools.Tools
 
         private static void OnSetEnabled(bool value)
         {
-            ButtonDisablerIsEnabled = value;
-            MelonPrefEnabled.Value = value;
-            Main.MelonPrefCategory.SaveToFile(false);
+            ButtonDisablerIsEnabled.Value = value;
+
+
+
             DisableButtons();
         }
 
         private static void OnEndOfLevelButtonEnabled(bool value)
         {
-            _endOfLevelButton = value;
-            MelonPrefEndOfLevelButton.Value = value;
-            Main.MelonPrefCategory.SaveToFile(false);
+            _endOfLevelButton.Value = value;
+            MelonPreferences.Save();
             DisableButtons();
         }
     }
