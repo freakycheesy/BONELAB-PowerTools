@@ -562,16 +562,16 @@
     <Compile Include="BuildInfo.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\BrickShooter.cs" />
-    <Compile Include="Tools\BugoSpray.cs" />
+    <Compile Include="Templates\ToolTemplate.cs" />
+    <Compile Include="ToolLoader.cs" />
+    <Compile Include="Tools\BaseTool.cs" />
     <Compile Include="Tools\ButtonDisabler.cs" />
-    <Compile Include="Tools\DeathSettings.cs" />
+    <Compile Include="Tools\RagdollLegs.cs" />
     <Compile Include="Tools\GravityAdjuster.cs" />
     <Compile Include="Tools\InfiniteAmmo.cs" />
-    <Compile Include="Tools\BaseTool.cs" />
     <Compile Include="Tools\PhysicsTool.cs" />
     <Compile Include="Tools\PlayerMovement.cs" />
-    <Compile Include="Tools\RagdollLegs.cs" />
+    <Compile Include="Tools\DeathSettings.cs" />
     <Compile Include="Tools\VaultingToggle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

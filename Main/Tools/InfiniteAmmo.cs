@@ -4,17 +4,16 @@ using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Data;
 using MelonLoader;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PowerTools.Tools {
-
-    public abstract class InfiniteAmmo // this whole thing is so janky but if it works it works
-    {
-
-        public static MelonPreferences_Entry<bool> InfAmmo {
-            get; set;
-        }
-
+    public class InfiniteAmmo : BaseTool {
+        public static InfiniteAmmo Instance {get; private set;}
+        public static MelonPreferences_Entry<bool> InfAmmo => Instance.ToolEnabled;
         public static MelonPreferences_Entry<bool> GiveAmmoWhenEmpty {
             get; set;
         }
@@ -33,27 +32,26 @@ namespace PowerTools.Tools {
         public static MelonPreferences_Entry<bool> MidasTouch {
             get; set;
         }
+        public override void Start() {
+            base.Start();
+            Instance = this;
+        }
 
-        public static void Start() {
-            MelonPreferencesCreator();
-            BoneMenuCreator();
+        public override void MelonCreator() {
+            GiveAmmoWhenEmpty = Main.Preferences.CreateEntry("GiveAmmoWhenEmpty", false);
+            InfMags = Main.Preferences.CreateEntry("InfiniteMags", false);
+            AutoChamber = Main.Preferences.CreateEntry("AutoChamber", false);
+            AutoLoad = Main.Preferences.CreateEntry("AutoLoad", false);
+            MidasTouch = Main.Preferences.CreateEntry("MidasTouch", false);
         }
-        public static void MelonPreferencesCreator() {
-            InfAmmo = Main.MelonPrefCategory.CreateEntry("InfiniteAmmoIsEnabled", false);
-            GiveAmmoWhenEmpty = Main.MelonPrefCategory.CreateEntry("GiveAmmoWhenEmpty", false);
-            InfMags = Main.MelonPrefCategory.CreateEntry("InfiniteMags", false);
-            AutoChamber = Main.MelonPrefCategory.CreateEntry("AutoChamber", false);
-            AutoLoad = Main.MelonPrefCategory.CreateEntry("AutoLoad", false);
-            MidasTouch = Main.MelonPrefCategory.CreateEntry("MidasTouch", false);
-        }
-        public static void BoneMenuCreator() {
-            var infiniteAmmo = Main.Game.CreatePage("Infinite Ammo", Color.green);
-            infiniteAmmo.CreateBool("Infinite Ammo", Color.green, InfAmmo.Value, OnSetEnabled);
-            infiniteAmmo.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
-            infiniteAmmo.CreateBool("Auto Chamber", Color.green, AutoChamber.Value, OnAutoChamber);
-            infiniteAmmo.CreateBool("Auto Load Guns", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
-            infiniteAmmo.CreateBool("Infinite Mags", Color.green, InfMags.Value, OnInfiniteMags);
-            infiniteAmmo.CreateBool("Midas Touch", Color.green, MidasTouch.Value, OnGoldMags);
+        public override void BoneMenuCreator() {
+            Page = Main.Player.CreatePage("Infinite Ammo", Color.green);
+            CreateEnabledBool(Page, this);
+            Page.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
+            Page.CreateBool("Auto Chamber", Color.green, AutoChamber.Value, OnAutoChamber);
+            Page.CreateBool("Auto Load Guns", Color.green, GiveAmmoWhenEmpty.Value, OnAutoLoad);
+            Page.CreateBool("Infinite Mags", Color.green, InfMags.Value, OnInfiniteMags);
+            Page.CreateBool("Midas Touch", Color.green, MidasTouch.Value, OnGoldMags);
         }
 
         private static void OnGoldMags(bool obj) {
@@ -61,8 +59,8 @@ namespace PowerTools.Tools {
             MelonPreferences.Save();
         }
 
-        private static void OnSetEnabled(bool value) {
-            InfAmmo.Value = value;
+        public override void OnSetEnabled(bool value) {
+            base.OnSetEnabled(value);
             MelonPreferences.Save();
         }
 

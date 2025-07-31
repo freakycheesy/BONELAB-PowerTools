@@ -1,52 +1,47 @@
 ﻿using HarmonyLib;
 using Il2CppSLZ.Marrow;
 using MelonLoader;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace PowerTools.Tools {
     public class PhysicsTool : BaseTool {
         public static MelonPreferences_Entry<bool> ForcePullAnything;
-        public new static void Start() {
-            Reset();
-            MelonCreator();
-            BoneMenuCreator();
+        public override void MelonCreator() {
+            base.MelonCreator();
+            ForcePullAnything = Main.Preferences.CreateEntry("ForcePullAnything", false);
+        }
+        public override void BoneMenuCreator() {
+            base.BoneMenuCreator();
+            Page = Main.Game.CreatePage("Physics Tool", Color.green);
+            CreateEnabledBool(Page, this);
+            Page.CreateBool("Force Pull Anything (Cannot Reverse)", Color.green, ForcePullAnything.Value, (a) => {
+                ForcePullAnything.Value = a;
+                foreach (var grip in Resources.FindObjectsOfTypeAll<Grip>()) {
+                    GripPatch.AddForcePull(grip);
+                }
+            });
         }
 
-        public new static void MelonCreator() {
-            ForcePullAnything = Main.MelonPrefCategory.CreateEntry("ForcePullAnything", false);
-        }
+        [HarmonyPatch(typeof(Grip))]
+        private static class GripPatch {
 
-        public new static void BoneMenuCreator() {
-            var page = Main.Game.CreatePage("Physics Tool", Color.green);
-            page.CreateBool("Force Pull Anything", Color.green, ForcePullAnything.Value, ForcePullEveryGrabbable);
-        }
-
-        private static void ForcePullEveryGrabbable(bool obj) {
-            if (obj) {
-                
-            }
-        }
-
-        public class ForcePullEntity : ForcePullGrip {
-            public void Awake() {
-                _grip = GetComponent<Grip>();
-                maxForce = int.MaxValue;
-                maxSpeed = int.MaxValue;
-            }
-        }
-
-        [HarmonyPatch(typeof(ForcePullEntity))]
-        public static class GripPatch {
-            public static List<Grip> grips = new List<Grip>();
             [HarmonyPatch(nameof(Grip.Awake))]
-            public static void Awake(Grip __instance) {
-                grips.Add(__instance);
+            [HarmonyPostfix]
+            private static void Awake(Grip __instance) {
+                AddForcePull(__instance);
             }
-        }
 
-        public new static void Reset() {
+            public static void AddForcePull(Grip __instance) {
+                if (ForcePullAnything.Value)
+                    if (!__instance.gameObject.TryGetComponent(out ForcePullGrip forcePull)) {
+                    forcePull = __instance.gameObject.AddComponent<ForcePullGrip>();
+                    forcePull.gameObject.layer = LayerMask.NameToLayer("Interactable");
+                    forcePull._grip = __instance;
+                    forcePull.maxForce = int.MaxValue;
+                    forcePull.maxSpeed = int.MaxValue;
+                }
+            }
         }
     }
 }

@@ -1,27 +1,46 @@
-﻿using BoneLib;
+﻿using BoneLib.BoneMenu;
 using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using UnityEngine;
 
 namespace PowerTools.Tools {
     public class BaseTool {
-        public static void Start() {
-            Reset();
-            MelonCreator();
-            BoneMenuCreator();
+        public Page Page;
+        public MelonPreferences_Entry<bool> ToolEnabled;
+        public virtual void Start() {
+            try {
+                MelonCreator();
+                BoneMenuCreator();
+            }
+            catch (System.Exception e) {
+                MelonLogger.Error($"Error when loading tool: ({GetType().FullName})");
+                MelonLogger.Error(e);
+            }
+            MelonLogger.Error($"Loaded tool: ({GetType().FullName})");
         }
 
-        public static void MelonCreator() {
+        public virtual void MelonCreator() {
+            if (ToolEnabled != null)
+                return;
+            ToolEnabled = Main.Preferences.CreateEntry($"{GetType().FullName}.Enabled", false);
         }
 
-        public static void BoneMenuCreator() {
+        public virtual void BoneMenuCreator() {
+            if (Page != null)
+                return;
         }
 
-        public static void Reset() {
+        public virtual void OnSetEnabled(bool value) {
+            ToolEnabled.Value = value;
+        }
+
+        public virtual void Reset() {
+            if (ToolEnabled == null)
+                return;
+        }
+
+        public static void CreateEnabledBool(Page page, BaseTool baseTool) {
+            page.CreateBool("Enabled", Color.green, baseTool.ToolEnabled.Value, (a) => baseTool.ToolEnabled.Value = a);
         }
     }
 }

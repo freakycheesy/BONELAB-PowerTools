@@ -1,33 +1,25 @@
 ﻿using BoneLib;
-using MelonLoader;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace PowerTools.Tools
-{
-    internal static class RagdollLegs
-    {
-        //need to make a melody patch or whatever so it doesn't rest when unragdolling from something like ragdoll mod
-        //what did I mean by this top comment??????????????
+namespace PowerTools.Tools {
+    public class RagdollLegs : BaseTool {
 
-        public static void Start() {
-            BoneMenuCreator();
-        }
-        public static void BoneMenuCreator()
-        {
-            var ragdollLegs = Main.Player.CreatePage("Ragdoll Legs", Color.green);
-            ragdollLegs.CreateBool("Mod Toggle", Color.green, _isEnabled, OnSetEnabled);
+        public override void BoneMenuCreator() {
+            Page = Main.Player.CreatePage("Ragdoll Legs", Color.green);
+            Page.CreateBool("Mod Toggle", Color.green, _isEnabled, OnSetEnabled);
 
         }
-        private static void OnSetEnabled(bool value)
-        {
+        public override void OnSetEnabled(bool value) {
             _isEnabled = value;
-            if (value)
-            {
+            if (value) {
                 Player.PhysicsRig.PhysicalLegs();
             }
-            else
-            {
+            else {
                 Player.PhysicsRig.UnRagdollRig();
             }
         }

@@ -1,42 +1,29 @@
 ﻿using BoneLib;
-using HarmonyLib;
-using Il2CppSLZ.Bonelab;
+using BoneLib.BoneMenu;
 using Il2CppSLZ.Marrow;
-using Il2CppSLZ.Marrow.SceneStreaming;
 using MelonLoader;
-using System;
 using UnityEngine;
 
-namespace PowerTools.Tools
-{
-    internal static class DeathSettings
-    {
-        public static MelonPreferences_Entry<bool> ReloadLevel {
-            get; set;
-        }
-        public static MelonPreferences_Entry<float> MelonPrefDeathTime { get; set; }
+namespace PowerTools.Tools {
+    public class DeathSettings : BaseTool {
+        public static MelonPreferences_Entry<bool> ReloadLevel;
+        public static MelonPreferences_Entry<float> DeathTime;
 
-        public static void Start() {
-            MelonPreferencesCreator();
-            BoneMenuCreator();
+        public override void MelonCreator() {
+            base.MelonCreator();
+            ReloadLevel = Main.Preferences.CreateEntry("ReloadLevel", false);
+            DeathTime = Main.Preferences.CreateEntry("Damage Threshold", 3f);
         }
 
-        public static void MelonPreferencesCreator()
-        {
-            ReloadLevel = Main.MelonPrefCategory.CreateEntry("ReloadLevel", false);
-            MelonPrefDeathTime = Main.MelonPrefCategory.CreateEntry("Damage Threshold", 3f);
-        }
-
-        public static void BoneMenuCreator()
-        {
-            var deathTimeCustomizer = Main.Player.CreatePage("Death Settings", Color.green);
-
-            deathTimeCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a)=> PlayerHealth.reloadLevelOnDeath = a);
-            deathTimeCustomizer.CreateFunction("Die", Color.green, OnDie);
-            deathTimeCustomizer.CreateFloat("Death Time", Color.green, MelonPrefDeathTime.Value, 10f, 0f, 100f, (dt) =>
-            {
-                MelonPrefDeathTime.Value = dt;
-                PlayerHealth.deathTimeAmount = MelonPrefDeathTime.Value;
+        public override void BoneMenuCreator() {
+            base.BoneMenuCreator();
+            Page = Main.Player.CreatePage("Death Settings", Color.green);
+            CreateEnabledBool(Page, this);
+            Page.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a) => PlayerHealth.reloadLevelOnDeath = a);
+            Page.CreateFunction("Die", Color.green, OnDie);
+            Page.CreateFloat("Death Time", Color.green, DeathTime.Value, 10f, 0f, 100f, (dt) => {
+                DeathTime.Value = dt;
+                PlayerHealth.deathTimeAmount = DeathTime.Value;
             });
         }
 
@@ -44,13 +31,20 @@ namespace PowerTools.Tools
             get {
                 if (Player.RigManager?.health != null)
                     return Player.RigManager.health.TryCast<Player_Health>();
-                else return null;
+                else
+                    return null;
             }
         }
         private static void OnDie() {
             PlayerHealth.Dying(100);
             PlayerHealth.Death();
             PlayerHealth.Respawn();
+        }
+
+        public override void Reset() {
+            base.Reset();
+            PlayerHealth.reloadLevelOnDeath = ReloadLevel.Value;
+            PlayerHealth.deathTimeAmount = DeathTime.Value;
         }
     }
 }
