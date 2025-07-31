@@ -38,7 +38,6 @@ namespace PowerTools
             new GravityAdjuster(),
             new InfiniteAmmo(),
             new PhysicsTool(),
-            new PlayerMovement(),
             new RagdollLegs(),
             new VaultingToggle(),
         };

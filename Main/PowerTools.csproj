@@ -570,7 +570,6 @@
     <Compile Include="Tools\GravityAdjuster.cs" />
     <Compile Include="Tools\InfiniteAmmo.cs" />
     <Compile Include="Tools\PhysicsTool.cs" />
-    <Compile Include="Tools\PlayerMovement.cs" />
     <Compile Include="Tools\DeathSettings.cs" />
     <Compile Include="Tools\VaultingToggle.cs" />
   </ItemGroup>
