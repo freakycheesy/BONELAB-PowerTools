@@ -52,9 +52,8 @@ namespace PowerTools
 
             GravityAdjuster.Start();
 
-            //Loadouts.Start();
-
             InfiniteAmmo.Start();
+
             PlayerMovement.Start();
 
             RagdollLegs.Start();
@@ -62,12 +61,10 @@ namespace PowerTools
 
         private static void OnSceneAwake()
         {
-            DeathSettings.DeathTimeSetter();
-            
+            PlayerMovement.Reset();
+
             ButtonDisabler.DisableButtons();
-            
-            RagdollOnDeath.OnSetEnabled(RagdollOnDeath.RagdollOnDeathIsEnabled.Value);
-            
+                        
             GravityAdjuster.GravityAdjust();
         }
 
@@ -75,14 +72,5 @@ namespace PowerTools
             base.OnApplicationQuit();
             MelonPreferences.Save();
         }
-
-        public override void OnUpdate() // Only run tools under OnUpdate() if theres no alternatives and if an alternative is found please PR it
-        {
-            //BugoSpray.BugoRemover(); this is stupid I only made it for a bit
-            
-            //BrickShooter.dfgijkhokjnhgrshjikhjiusgihuseg(); IT DOESNT EVEN SHOOT BRICKS??????????? WHY
-        }
-
-
     }
 }

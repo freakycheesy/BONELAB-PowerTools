@@ -1,5 +1,7 @@
 ﻿
 
+using BoneLib;
+using Il2CppSLZ.Marrow;
 using MelonLoader;
 using UnityEngine;
 
@@ -19,19 +21,20 @@ namespace PowerTools.Tools
 
         public static void BoneMenuCreator()
         {
+            Hooking.OnPlayerDeath += Hooking_OnPlayerDeath;
             var ragdollOnDeathCustomizer = Main.Player.CreatePage("Ragdoll On Death", Color.green);
 
-            ragdollOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, RagdollOnDeathIsEnabled.Value, OnSetEnabled);
+            ragdollOnDeathCustomizer.CreateBool("Mod Toggle", Color.green, RagdollOnDeathIsEnabled.Value, (a) => {
+                RagdollOnDeathIsEnabled.Value = a;
+                DeathSettings.PlayerHealth._testRagdollOnDeath = RagdollOnDeathIsEnabled.Value;
+            });
         }
 
-
-        public static void OnSetEnabled(bool value)
-        {
-            BoneLib.Player.RigManager.health._testRagdollOnDeath = value;
-            RagdollOnDeathIsEnabled.Value = value;
-            RagdollOnDeathIsEnabled.Value = value;
-
-
+        private static void Hooking_OnPlayerDeath() {
+            if (!RagdollOnDeathIsEnabled.Value)
+                return;
+            Player.PhysicsRig.RagdollRig();
+            Player.PhysicsRig.Invoke(nameof(PhysicsRig.UnRagdollRig), DeathSettings.PlayerHealth.deathTimeAmount);
         }
     }
 }

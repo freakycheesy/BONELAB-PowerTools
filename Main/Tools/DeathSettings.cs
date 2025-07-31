@@ -31,41 +31,28 @@ namespace PowerTools.Tools
         {
             var deathTimeCustomizer = Main.Player.CreatePage("Death Settings", Color.green);
 
-            deathTimeCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, OnSetReloadLevel);
+            deathTimeCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a)=> PlayerHealth.reloadLevelOnDeath = a);
 
             deathTimeCustomizer.CreateFunction("Die", Color.green, OnDie);
             deathTimeCustomizer.CreateFloat("Death Time", Color.green, MelonPrefDeathTime.Value, 1f, 0f, 100f, (dt) =>
             {
                 MelonPrefDeathTime.Value = dt;
-                MelonPreferences.Save();
-                DeathTimeSetter();
+                PlayerHealth.deathTimeAmount = MelonPrefDeathTime.Value;
             });
         }
 
-        public static Player_Health PlayerHealth => Player.RigManager.health as Player_Health;
-
-        private static void OnSetReloadLevel(bool obj) {
-            PlayerHealth.reloadLevelOnDeath = obj;
+        public static Player_Health PlayerHealth {
+            get {
+                if (Player.RigManager?.health != null)
+                    return Player.RigManager.health.TryCast<Player_Health>();
+                else return null;
+            }
         }
 
         private static void OnDie() {
             PlayerHealth.Dying(100);
             PlayerHealth.Death();
             PlayerHealth.Respawn();
-        }
-
-        public static void DeathTimeSetter()
-        {
-            PlayerHealth.deathTimeAmount = MelonPrefDeathTime.Value;
-        }
-
-        private static void OnSetEnabled(bool value)
-        {
-            if (!value)
-            {
-                PlayerHealth.deathTimeAmount = 3;
-            }
-            MelonPreferences.Save();
         }
     }
 }

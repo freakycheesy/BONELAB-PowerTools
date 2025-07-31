@@ -1,10 +1,4 @@
 ﻿using BoneLib;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PowerTools.Tools {
@@ -12,17 +6,26 @@ namespace PowerTools.Tools {
 
         public static float JumpVelocity;
         public static void Start() {
+            Reset();
             BoneMenuCreator();
         }
 
         public static void BoneMenuCreator() {
-            JumpVelocity = Player.RemapRig.jumpVelocity;
             var page = Main.Player.CreatePage("PlayerMovement", Color.green);
-
             page.CreateFloat("Jump Velocity", Color.green, JumpVelocity, 0.5f, 0, 100, (a) => {
                 JumpVelocity = a;
-                Player.RemapRig.jumpVelocity = JumpVelocity;
+                if(Player.RemapRig) Player.RemapRig.jumpVelocity = JumpVelocity;
             });
+        }
+
+        public static void Reset() {
+            Hooking.OnSwitchAvatarPostfix -= Hooking_OnSwitchAvatarPostfix;
+            Hooking.OnSwitchAvatarPostfix += Hooking_OnSwitchAvatarPostfix;
+        }
+
+        private static void Hooking_OnSwitchAvatarPostfix(Il2CppSLZ.VRMK.Avatar obj) {
+            if (Player.RemapRig)
+                JumpVelocity = Player.RemapRig.jumpVelocity;
         }
     }
 }
