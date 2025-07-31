@@ -8,6 +8,7 @@ namespace PowerTools.Tools
     {
         public static MelonPreferences_Entry<bool> ButtonDisablerIsEnabled { get;  set; }
         public static MelonPreferences_Entry<bool> _endOfLevelButton { get; set; }
+        public static void Reset() => DisableButtons();
         public static void Start() {
             MelonPreferencesCreator();
             BoneMenuCreator();

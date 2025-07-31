@@ -2,23 +2,27 @@
 using UnityEngine;
 
 namespace PowerTools.Tools {
-    public static class PlayerMovement {
+    public class PlayerMovement : BaseTool {
 
         public static float JumpVelocity;
-        public static void Start() {
+        public new static void Start() {
             Reset();
             BoneMenuCreator();
         }
 
-        public static void BoneMenuCreator() {
+        public new static void BoneMenuCreator() {
             var page = Main.Player.CreatePage("PlayerMovement", Color.green);
+            if (Player.RemapRig)
+                JumpVelocity = Player.RemapRig.jumpVelocity;
             page.CreateFloat("Jump Velocity", Color.green, JumpVelocity, 0.5f, 0, 100, (a) => {
                 JumpVelocity = a;
                 if(Player.RemapRig) Player.RemapRig.jumpVelocity = JumpVelocity;
             });
         }
 
-        public static void Reset() {
+        public new static void Reset() {
+            if (Player.RemapRig)
+                JumpVelocity = Player.RemapRig.jumpVelocity;
             Hooking.OnSwitchAvatarPostfix -= Hooking_OnSwitchAvatarPostfix;
             Hooking.OnSwitchAvatarPostfix += Hooking_OnSwitchAvatarPostfix;
         }

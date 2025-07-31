@@ -84,6 +84,8 @@ namespace PowerTools.Tools
         }
 
 
+        public static void Reset() => GravityAdjust();
+
         public static void GravityAdjust()
         {
             if (_isEnabled)

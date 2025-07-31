@@ -32,9 +32,8 @@ namespace PowerTools.Tools
             var deathTimeCustomizer = Main.Player.CreatePage("Death Settings", Color.green);
 
             deathTimeCustomizer.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a)=> PlayerHealth.reloadLevelOnDeath = a);
-
             deathTimeCustomizer.CreateFunction("Die", Color.green, OnDie);
-            deathTimeCustomizer.CreateFloat("Death Time", Color.green, MelonPrefDeathTime.Value, 1f, 0f, 100f, (dt) =>
+            deathTimeCustomizer.CreateFloat("Death Time", Color.green, MelonPrefDeathTime.Value, 10f, 0f, 100f, (dt) =>
             {
                 MelonPrefDeathTime.Value = dt;
                 PlayerHealth.deathTimeAmount = MelonPrefDeathTime.Value;
@@ -48,7 +47,6 @@ namespace PowerTools.Tools
                 else return null;
             }
         }
-
         private static void OnDie() {
             PlayerHealth.Dying(100);
             PlayerHealth.Death();

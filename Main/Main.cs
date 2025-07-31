@@ -46,8 +46,6 @@ namespace PowerTools
 
             ButtonDisabler.Start();
 
-            RagdollOnDeath.Start();
-
             VaultingToggle.Start();
 
             GravityAdjuster.Start();
@@ -63,9 +61,9 @@ namespace PowerTools
         {
             PlayerMovement.Reset();
 
-            ButtonDisabler.DisableButtons();
+            ButtonDisabler.Reset();
                         
-            GravityAdjuster.GravityAdjust();
+            GravityAdjuster.Reset();
         }
 
         public override void OnApplicationQuit() {
