@@ -10,13 +10,15 @@ namespace PowerTools.Tools {
         private static float _gravity = -9.81f;
         //private static float _originalGravity = -9.8f;
         public override void MelonCreator() {
-            MelonPrefGravityValue = Main.Preferences.CreateEntry("Gravity Adjuster Value", 9.81f);
+            base.MelonCreator();
+            MelonPrefGravityValue = Main.Preferences.CreateEntry("Gravity Adjuster Value", -9.81f);
             if (MelonPrefGravityValue != null) {
                 _gravity = MelonPrefGravityValue.Value;
             }
         }
 
         public override void BoneMenuCreator() {
+            base.BoneMenuCreator();
             Page = Main.Game.CreatePage("Gravity Adjuster", Color.green);
             CreateEnabledBool(Page, this);
             //100% a better way to do this but I don't feel like doing it

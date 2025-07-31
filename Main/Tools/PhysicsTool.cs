@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BoneLib.BoneMenu;
+using HarmonyLib;
 using Il2CppSLZ.Marrow;
 using MelonLoader;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using UnityEngine;
 namespace PowerTools.Tools {
     public class PhysicsTool : BaseTool {
         public static MelonPreferences_Entry<bool> ForcePullAnything;
+        public static float maxForce = 1000;
+        public static float maxSpeed = 1E+10f;
+
         public override void MelonCreator() {
             base.MelonCreator();
             ForcePullAnything = Main.Preferences.CreateEntry("ForcePullAnything", false);
@@ -20,6 +24,7 @@ namespace PowerTools.Tools {
                 foreach (var grip in Resources.FindObjectsOfTypeAll<Grip>()) {
                     GripPatch.AddForcePull(grip);
                 }
+                MelonPreferences.Save();
             });
         }
 
@@ -33,14 +38,13 @@ namespace PowerTools.Tools {
             }
 
             public static void AddForcePull(Grip __instance) {
-                if (ForcePullAnything.Value)
-                    if (!__instance.gameObject.TryGetComponent(out ForcePullGrip forcePull)) {
-                    forcePull = __instance.gameObject.AddComponent<ForcePullGrip>();
-                    forcePull.gameObject.layer = LayerMask.NameToLayer("Interactable");
-                    forcePull._grip = __instance;
-                    forcePull.maxForce = int.MaxValue;
-                    forcePull.maxSpeed = int.MaxValue;
-                }
+                if (!ForcePullAnything.Value)
+                    return;
+                if (!__instance.gameObject.TryGetComponent(out ForcePullGrip forcePull)) forcePull = __instance.gameObject.AddComponent<ForcePullGrip>();
+                forcePull.gameObject.layer = LayerMask.NameToLayer("Interactable");
+                forcePull._grip = __instance;
+                forcePull.maxForce = maxForce;
+                forcePull.maxSpeed = maxSpeed;
             }
         }
     }
