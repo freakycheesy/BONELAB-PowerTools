@@ -43,8 +43,6 @@ namespace PowerTools
         private static void OnSceneAwake()
         {
             ToolLoader.ResetTools();
-            if(ToolLoader.loadedTools.Count < 1)
-                ToolLoader.LoadTools(defaultMods);
             Save();
         }
 
