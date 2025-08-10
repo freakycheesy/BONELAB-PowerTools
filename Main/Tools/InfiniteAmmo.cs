@@ -31,6 +31,9 @@ namespace PowerTools.Tools {
         public static MelonPreferences_Entry<bool> MidasTouch {
             get; set;
         }
+
+        public override string ToolName => "Infinite Ammo";
+
         public override void Start() {
             base.Start();
             Instance = this;
@@ -46,8 +49,6 @@ namespace PowerTools.Tools {
         }
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page = Main.Player.CreatePage("Infinite Ammo", Color.green);
-            CreateEnabledBool(Page, this);
             Page.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
             Page.CreateBool("Auto Chamber", Color.green, AutoChamber.Value, OnAutoChamber);
             Page.CreateBool("Auto Load Guns", Color.green, GiveAmmoWhenEmpty.Value, OnAutoLoad);
@@ -57,31 +58,31 @@ namespace PowerTools.Tools {
 
         private static void OnGoldMags(bool obj) {
             MidasTouch.Value = obj;
-            MelonPreferences.Save();
+Main.Save();
         }
 
         public override void OnSetEnabled(bool value) {
             base.OnSetEnabled(value);
-            MelonPreferences.Save();
+Main.Save();
         }
 
         private static void OnGiveAmmoWhenEmpty(bool value) {
             GiveAmmoWhenEmpty.Value = value;
-            MelonPreferences.Save();
+Main.Save();
         }
 
         private static void OnInfiniteMags(bool value) {
             InfMags.Value = value;
-            MelonPreferences.Save();
+Main.Save();
         }
 
         private static void OnAutoChamber(bool value) {
             AutoChamber.Value = value;
-            MelonPreferences.Save();
+Main.Save();
         }
         private static void OnAutoLoad(bool value) {
             AutoLoad.Value = value;
-            MelonPreferences.Save();
+Main.Save();
         }
 
         public static class GunPatches {

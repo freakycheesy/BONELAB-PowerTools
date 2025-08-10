@@ -225,6 +225,10 @@
     <Reference Include="Il2Cpp__Generated">
       <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2Cpp__Generated.dll</HintPath>
     </Reference>
+    <Reference Include="Tomlet, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\BONELAB\MelonLoader\net6\Tomlet.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Addressables">
       <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Unity.Addressables.dll</HintPath>
     </Reference>
@@ -574,4 +578,7 @@
     <Compile Include="Tools\VaultingToggle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="COPY &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\BONELAB\Mods\freakycheesy.powertools\Mods\&quot;" />
+  </Target>
 </Project>

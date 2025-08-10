@@ -11,20 +11,20 @@ namespace PowerTools.Tools {
         public static float maxForce = 1000;
         public static float maxSpeed = 1E+10f;
 
+        public override string ToolName => "Physics Tool";
+
         public override void MelonCreator() {
             base.MelonCreator();
             ForcePullAnything = Main.Preferences.CreateEntry("ForcePullAnything", false);
         }
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page = Main.Game.CreatePage("Physics Tool", Color.green);
-            CreateEnabledBool(Page, this);
             Page.CreateBool("Force Pull Anything (Cannot Reverse)", Color.green, ForcePullAnything.Value, (a) => {
                 ForcePullAnything.Value = a;
                 foreach (var grip in Resources.FindObjectsOfTypeAll<Grip>()) {
                     GripPatch.AddForcePull(grip);
                 }
-                MelonPreferences.Save();
+    Main.Save();
             });
         }
 

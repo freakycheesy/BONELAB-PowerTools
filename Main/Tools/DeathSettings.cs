@@ -17,8 +17,6 @@ namespace PowerTools.Tools {
 
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page = Main.Player.CreatePage("Death Settings", Color.green);
-            CreateEnabledBool(Page, this);
             Page.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a) => PlayerHealth.reloadLevelOnDeath = a);
             Page.CreateFunction("Die", Color.green, OnDie);
             Page.CreateFloat("Death Time", Color.green, DeathTime.Value, 10f, 0f, 100f, (dt) => {
@@ -35,6 +33,9 @@ namespace PowerTools.Tools {
                     return null;
             }
         }
+
+        public override string ToolName => "Death Settings";
+
         private static void OnDie() {
             PlayerHealth.Dying(100);
             PlayerHealth.Death();

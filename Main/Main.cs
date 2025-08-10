@@ -12,19 +12,17 @@ namespace PowerTools
     public partial class Main : MelonMod
     {
         public static Page MainPage;
-        public static Page Player;
-        public static Page Game;
         public static Action OnGUIEvent;
         public static MelonPreferences_Category Preferences { get; private set; }
         public override void OnInitializeMelon() {
-            Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
-            Preferences = MelonPreferences.CreateCategory("Power Tools");
-
+            
+            Preferences = MelonPreferences.CreateCategory("PowerTools");
+            Preferences.SetFilePath("UserData/freakycheesy.cfg");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
 
-            Player = MainPage.CreatePage("Player", Color.green);
-            Game = MainPage.CreatePage("Game", Color.green);
             ToolLoader.LoadTools(defaultMods);
+            Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
+            Hooking.OnLevelUnloaded += Save;
         }
 
         public override void OnGUI() {
@@ -47,11 +45,15 @@ namespace PowerTools
             ToolLoader.ResetTools();
             if(ToolLoader.loadedTools.Count < 1)
                 ToolLoader.LoadTools(defaultMods);
-            MelonPreferences.Save();
+            Save();
         }
 
         public override void OnApplicationQuit() {
             base.OnApplicationQuit();
+            Save();
+        }
+
+        public static void Save() {
             MelonPreferences.Save();
         }
     }

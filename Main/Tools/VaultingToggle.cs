@@ -9,28 +9,29 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PowerTools.Tools {
-    [HarmonyPatch(typeof(PhysicsRig), "CheckDangle")]
     public class VaultingToggle : BaseTool {
-        public static bool enabled => instance.ToolEnabled.Value;
+        public override string ToolName => "Vaulting Toggle";
+
         public static VaultingToggle instance;
         public override void Start() {
             base.Start();
             instance = this;
         }
         public override void BoneMenuCreator() {
-            Page = Main.Player.CreatePage("Vaulting Toggle", Color.green);
-            CreateEnabledBool(Page, this);
+            base.BoneMenuCreator();
         }
-
-        [HarmonyPrefix]
-        public static bool Prefix(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
-        {
-            if (!enabled) {
-                __result = false;
-                return false;
-            }
-            else {
-                return true;
+        [HarmonyPatch(typeof(PhysicsRig), "CheckDangle")]
+        public static class VaultPatch {
+            [HarmonyPrefix]
+            public static bool Prefix(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
+            {
+                if (!instance.ToolEnabled.Value) {
+                    __result = false;
+                    return false;
+                }
+                else {
+                    return true;
+                }
             }
         }
     }

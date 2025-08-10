@@ -3,21 +3,19 @@ using MelonLoader;
 using UnityEngine;
 
 namespace PowerTools.Tools {
-    public class ButtonDisabler : BaseTool{
+    public class ButtonDisabler : BaseTool {
         public override void Start() {
             base.Start();
         }
 
         public override void MelonCreator() {
             base.MelonCreator();
-            _endOfLevelButton = Main.Preferences.CreateEntry("Disable end of level button", false);
+            EndOfLevelButton = Main.Preferences.CreateEntry("Disableendoflevelbutton", false);
         }
 
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page = Main.Game.CreatePage("Button Disabler", Color.green);
-            CreateEnabledBool(Page, this);
-            Page.CreateBool("Disable Next Level Button", Color.green, _endOfLevelButton.Value, OnEndOfLevelButtonEnabled);
+            Page.CreateBool("Disable Next Level Button", Color.green, EndOfLevelButton.Value, OnEndOfLevelButtonEnabled);
         }
 
         public override void OnSetEnabled(bool value) {
@@ -29,8 +27,11 @@ namespace PowerTools.Tools {
             base.Reset();
             DisableButtons();
         }
-        public static MelonPreferences_Entry<bool> _endOfLevelButton {
+        public static MelonPreferences_Entry<bool> EndOfLevelButton {
             get; set;
+        }
+        public override string ToolName {
+            get => "Button Disabler";
         }
 
         public void DisableButtons() {
@@ -42,10 +43,10 @@ namespace PowerTools.Tools {
                         Transform child = obj.GetChild(i);
                         var buttonToggle = child.GetComponent<ButtonToggle>();
                         if (buttonToggle != null && ToolEnabled.Value) {
-                            if (_endOfLevelButton.Value) {
+                            if (EndOfLevelButton.Value) {
                                 buttonToggle.enabled = false;
                             }
-                            else if (!_endOfLevelButton.Value) {
+                            else if (!EndOfLevelButton.Value) {
                                 if (!child.name.Contains("prop_bigButton_NEXTLEVEL")) {
                                     buttonToggle.enabled = false;
                                 }
@@ -63,8 +64,8 @@ namespace PowerTools.Tools {
         }
 
         private void OnEndOfLevelButtonEnabled(bool value) {
-            _endOfLevelButton.Value = value;
-            MelonPreferences.Save();
+            EndOfLevelButton.Value = value;
+            Main.Save();
             DisableButtons();
         }
     }
