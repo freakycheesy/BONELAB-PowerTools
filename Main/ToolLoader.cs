@@ -11,9 +11,18 @@ namespace PowerTools {
     public static class ToolLoader {
         public static List<BaseTool> loadedTools = new List<BaseTool>();
         #region LoadTools
+        public static void LoadTool(BaseTool tool) {
+            loadedTools.Add(tool);
+            tool.Start();
+        }
+        public static void LoadTools() {
+            foreach (BaseTool tool in loadedTools) {
+                tool.Start();
+            }
+        }
         public static void LoadTools(IEnumerable<BaseTool> tools) {
             loadedTools.AddRange(tools);
-            foreach (var tool in loadedTools) {
+            foreach (var tool in tools) {
                 tool.Start();
             }
         }

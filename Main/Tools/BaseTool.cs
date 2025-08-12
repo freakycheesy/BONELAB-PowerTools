@@ -7,13 +7,17 @@ namespace PowerTools.Tools {
     public abstract class BaseTool {
         public Page Page;
         public MelonPreferences_Entry<bool> ToolEnabled;
+        public bool started;
         public abstract string ToolName {
             get;
         }
         public virtual void Start() {
+            if (started)
+                return;
             MelonCreator();
             BoneMenuCreator();
             MelonLogger.Msg($"Loaded tool: ({ToolName})");
+            started = true;
         }
 
         public virtual void MelonCreator() {
