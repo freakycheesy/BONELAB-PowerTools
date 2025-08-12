@@ -12,10 +12,11 @@ namespace PowerTools
     public partial class Main : MelonMod
     {
         public static Page MainPage;
+        public static Action OnUpdateEvent; 
+        public static Action OnFixedUpdateEvent;
         public static Action OnGUIEvent;
         public static MelonPreferences_Category Preferences { get; private set; }
         public override void OnInitializeMelon() {
-            
             Preferences = MelonPreferences.CreateCategory("PowerTools");
             Preferences.SetFilePath("UserData/freakycheesy.cfg");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
@@ -25,6 +26,16 @@ namespace PowerTools
             Hooking.OnLevelUnloaded += Save;
         }
 
+        public override void OnUpdate() {
+            base.OnUpdate();
+            OnUpdateEvent?.Invoke();
+        }
+
+        public override void OnFixedUpdate() {
+            base.OnFixedUpdate();
+            OnFixedUpdateEvent?.Invoke();
+        }
+
         public override void OnGUI() {
             base.OnGUI();
             if(!Application.isMobilePlatform) OnGUIEvent?.Invoke();
@@ -32,7 +43,7 @@ namespace PowerTools
 
         public static List<BaseTool> defaultMods = new List<BaseTool>() {
             new ButtonDisabler(),
-            new DeathSettings(),
+            new HealthSettings(),
             new GravityAdjuster(),
             new InfiniteAmmo(),
             new PhysicsTool(),

@@ -11,10 +11,7 @@ namespace PowerTools {
     public static class ToolLoader {
         public static List<BaseTool> loadedTools = new List<BaseTool>();
         #region LoadTools
-        public static void LoadTools(List<BaseTool> tools) {
-            LoadTools(tools.ToArray());
-        }
-        public static void LoadTools(BaseTool[] tools) {
+        public static void LoadTools(IEnumerable<BaseTool> tools) {
             loadedTools.AddRange(tools);
             foreach (var tool in loadedTools) {
                 tool.Start();
@@ -25,10 +22,7 @@ namespace PowerTools {
         public static void ResetTools() {
             ResetTools(loadedTools);
         }
-        public static void ResetTools(List<BaseTool> tools) {
-            ResetTools(tools.ToArray());
-        }
-        public static void ResetTools(BaseTool[] tools) {
+        public static void ResetTools(IEnumerable<BaseTool> tools) {
             foreach (var tool in tools) {
                 tool.Reset();
             }
