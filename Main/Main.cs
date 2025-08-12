@@ -24,6 +24,7 @@ namespace PowerTools
             ToolLoader.LoadTools(defaultMods);
             Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             Hooking.OnLevelUnloaded += Save;
+            HarmonyInstance.PatchAll();
         }
 
         public override void OnUpdate() {

@@ -15,15 +15,15 @@ namespace PowerTools.Tools {
         public static VaultingToggle instance;
         public override void Start() {
             base.Start();
-            instance = this;
         }
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
+            instance = this;
         }
-        [HarmonyPatch(typeof(PhysicsRig), "CheckDangle")]
+        [HarmonyPatch(typeof(PhysicsRig))]
         public static class VaultPatch {
-            [HarmonyPrefix]
-            public static bool Prefix(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
+            [HarmonyPatch(nameof(PhysicsRig.CheckDangle)), HarmonyPrefix]
+            public static bool CheckDangle(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
             {
                 if (!instance.ToolEnabled.Value) {
                     __result = false;

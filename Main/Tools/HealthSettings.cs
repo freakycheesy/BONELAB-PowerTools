@@ -4,6 +4,7 @@ using HarmonyLib;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Combat;
 using MelonLoader;
+using System;
 using UnityEngine;
 
 namespace PowerTools.Tools {
@@ -12,19 +13,28 @@ namespace PowerTools.Tools {
         public static MelonPreferences_Entry<bool> RagdollOnDeath;
         public static MelonPreferences_Entry<bool> ReloadLevel;
         public static MelonPreferences_Entry<float> DeathTime;
-
+        public override void Start() {
+            base.Start();
+        }
         private static void Hooking_OnPlayerDamageRecieved(float obj) {
             MelonLogger.Msg("Damage Recieved");
             if (GodMode.Value) PlayerHealth.SetFullHealth();
-            if (RagdollOnDeath.Value)
-                if (PlayerHealth.curr_Health <= 0) {
-                    Player.PhysicsRig.ShutdownRig();
-                    Player.PhysicsRig.RagdollRig();
-                }
+            if (RagdollOnDeath.Value && PlayerHealth.curr_Health <= 0)
+                Ragdoll();
         }
+
+        private static void Ragdoll() {
+            Player.PhysicsRig.ShutdownRig();
+            Player.PhysicsRig.RagdollRig();
+        }
+
+        private static void Unragdoll() {
+            Player.PhysicsRig.TurnOnRig();
+            Player.PhysicsRig.UnRagdollRig();
+        }
+
         public override void MelonCreator() {
             base.MelonCreator();
-            Hooking.OnPlayerDamageRecieved += Hooking_OnPlayerDamageRecieved;
             GodMode = Main.Preferences.CreateEntry("God Mode", false);
             RagdollOnDeath = Main.Preferences.CreateEntry("Ragdoll On Death", false);
             ReloadLevel = Main.Preferences.CreateEntry("ReloadLevel", false);
@@ -53,19 +63,31 @@ namespace PowerTools.Tools {
                 Main.Save();
             });
             Page.CreateFunction("Die", Color.green, OnDie);
+            Page.CreateFunction("Refill Health", Color.green, SetFullHealth);
+        }
+
+        public static void SetFullHealth() {
+            PlayerHealth?.SetFullHealth();
         }
 
         [HarmonyPatch(typeof(Player_Health))]
         public static class PlayerHealthPatch {
-            [HarmonyPatch(nameof(Player_Health.Respawn))]
+            [HarmonyPatch(nameof(Health.SetFullHealth)), HarmonyPrefix]
             public static void Respawn() {
                 MelonLogger.Msg("Respawn");
-                Player.PhysicsRig.TurnOnRig();
-                Player.PhysicsRig.UnRagdollRig();
+                Unragdoll();
             }
-            [HarmonyPatch(nameof(Player_Health.OnReceivedDamage))]
-            public static void OnReceivedDamage(Attack attack, PlayerDamageReceiver.BodyPart part) {
-                Hooking_OnPlayerDamageRecieved(0);
+
+            [HarmonyPatch(nameof(Health.Death)), HarmonyPostfix]
+            public static void Death() {
+                MelonLogger.Msg("Death");
+                if (RagdollOnDeath.Value)
+                    Ragdoll();
+            }
+
+            [HarmonyPatch(nameof(Player_Health.TAKEDAMAGE)), HarmonyPostfix]
+            public static void TAKEDAMAGE(float damage) {
+                Hooking_OnPlayerDamageRecieved(damage);
             }
         }
 
@@ -81,9 +103,9 @@ namespace PowerTools.Tools {
         public override string ToolName => "Health Settings";
 
         private static void OnDie() {
-            PlayerHealth.Dying(100);
-            PlayerHealth.Death();
-            PlayerHealth.Respawn();
+            PlayerHealth?.Dying(100);
+            PlayerHealth?.Death();
+            PlayerHealth?.Respawn();
         }
 
         public override void Reset() {
