@@ -16,10 +16,10 @@ namespace PowerTools
                 "<color=#00FFCC>o</color>" +
                 "<color=#00FFD4>l</color>" +
                 "<color=#00FFD4>s</color>";
-        internal const string Description = null;
-        internal const string Author = "freakycheesy";
-        internal const string Company = null;
-        internal const string Version = "6.0.0";
-        internal const string DownloadLink = null;
+        internal const string Description = "Adds a few quality of life features";
+        internal const string Author = "freakycheesy/Breadsoup";
+        internal const string Company = "cheesydev";
+        internal const string Version = "0.6.5";
+        internal const string DownloadLink = "https://thunderstore.io/c/bonelab/p/team_cheesy/PowerTools";
     }
 }

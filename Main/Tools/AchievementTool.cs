@@ -1,12 +1,13 @@
 ﻿using BoneLib.BoneMenu;
 using MelonLoader;
+using System;
 using UnityEngine;
 
 namespace PowerTools.Tools {
-    public class ToolTemplate : BaseTool {
-        public override string ToolName => throw new System.NotImplementedException();
+    public class AchievementTool : BaseTool {
+        public override string ToolName => "Achievement Tool";
 
-        public override Color ToolTheme => throw new System.NotImplementedException();
+        public override Color ToolTheme => Color.red + Color.yellow;
 
         public override void Start() {
             base.Start();
@@ -18,6 +19,11 @@ namespace PowerTools.Tools {
 
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
+            Page.CreateFunction("Unlock Achievements", ToolTheme, UnlockAchievements);
+        }
+
+        private void UnlockAchievements() {
+            throw new NotImplementedException();
         }
 
         public override void OnSetEnabled(bool value) {

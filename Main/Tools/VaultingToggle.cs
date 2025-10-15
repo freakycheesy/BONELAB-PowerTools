@@ -12,6 +12,8 @@ namespace PowerTools.Tools {
     public class VaultingToggle : BaseTool {
         public override string ToolName => "Vaulting Toggle";
 
+        public override Color ToolTheme => Color.magenta;
+
         public static VaultingToggle instance;
         public override void Start() {
             base.Start();
@@ -23,7 +25,7 @@ namespace PowerTools.Tools {
         [HarmonyPatch(typeof(PhysicsRig))]
         public static class VaultPatch {
             [HarmonyPatch(nameof(PhysicsRig.CheckDangle)), HarmonyPrefix]
-            public static bool CheckDangle(PhysicsRig __instance, ref bool __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
+            public static bool CheckDangle(PhysicsRig __instance, ref bool __result)
             {
                 if (!instance.ToolEnabled.Value) {
                     __result = false;

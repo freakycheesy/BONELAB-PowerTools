@@ -17,14 +17,12 @@ namespace PowerTools
         public static Action OnGUIEvent;
         public static MelonPreferences_Category Preferences { get; private set; }
         public override void OnInitializeMelon() {
-            Preferences = MelonPreferences.CreateCategory("PowerTools");
+            Preferences = MelonPreferences.CreateCategory("PowerTools", "Power Tools");
             Preferences.SetFilePath("UserData/freakycheesy.cfg");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
-
             ToolLoader.LoadTools(defaultMods);
             Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             Hooking.OnLevelUnloaded += Save;
-            HarmonyInstance.PatchAll();
         }
 
         public override void OnUpdate() {
@@ -42,14 +40,13 @@ namespace PowerTools
             if(!Application.isMobilePlatform) OnGUIEvent?.Invoke();
         }
 
-        public static List<BaseTool> defaultMods = new List<BaseTool>() {
-            new ButtonDisabler(),
+        public static BaseTool[] defaultMods = new BaseTool[] { new ButtonDisabler(),
             new HealthSettings(),
             new GravityAdjuster(),
             new InfiniteAmmo(),
             new PhysicsTool(),
             new RagdollLegs(),
-            new VaultingToggle(),
+            new VaultingToggle()
         };
 
         private static void OnSceneAwake()
@@ -59,11 +56,15 @@ namespace PowerTools
         }
 
         public override void OnApplicationQuit() {
-            base.OnApplicationQuit();
             Save();
+            base.OnApplicationQuit();
         }
 
         public static void Save() {
+            foreach (var entry in Preferences.Entries) {
+                entry.Save();
+            }
+            Preferences.SaveToFile();
             MelonPreferences.Save();
         }
     }

@@ -13,7 +13,7 @@ using UnityEngine;
 namespace PowerTools.Tools {
     public class InfiniteAmmo : BaseTool {
         public static InfiniteAmmo Instance {get; private set;}
-        public static MelonPreferences_Entry<bool> GiveAmmoWhenEmpty {
+        public static MelonPreferences_Entry<bool> InfiniteAmmoEnabled {
             get; set;
         }
 
@@ -28,11 +28,16 @@ namespace PowerTools.Tools {
         public static MelonPreferences_Entry<bool> AutoLoad {
             get; set;
         }
+        public static MelonPreferences_Entry<bool> EjectRefill {
+            get; set;
+        }
         public static MelonPreferences_Entry<bool> MidasTouch {
             get; set;
         }
 
         public override string ToolName => "Infinite Ammo";
+
+        public override Color ToolTheme => Color.yellow;
 
         public override void Start() {
             base.Start();
@@ -41,24 +46,32 @@ namespace PowerTools.Tools {
 
         public override void MelonCreator() {
             base.MelonCreator();
-            GiveAmmoWhenEmpty = Main.Preferences.CreateEntry("GiveAmmoWhenEmpty", false);
-            InfMags = Main.Preferences.CreateEntry("InfiniteMags", false);
+            InfiniteAmmoEnabled = Main.Preferences.CreateEntry("Infinite Ammo", false);
             AutoChamber = Main.Preferences.CreateEntry("AutoChamber", false);
             AutoLoad = Main.Preferences.CreateEntry("AutoLoad", false);
+            InfMags = Main.Preferences.CreateEntry("AutoRefill", false);
+            EjectRefill = Main.Preferences.CreateEntry("EjectRefill", false);
             MidasTouch = Main.Preferences.CreateEntry("MidasTouch", false);
         }
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page.CreateBool("Give ammo when mag can't be full", Color.green, GiveAmmoWhenEmpty.Value, OnGiveAmmoWhenEmpty);
-            Page.CreateBool("Auto Chamber", Color.green, AutoChamber.Value, OnAutoChamber);
-            Page.CreateBool("Auto Load Guns", Color.green, GiveAmmoWhenEmpty.Value, OnAutoLoad);
-            Page.CreateBool("Infinite Mags", Color.green, InfMags.Value, OnInfiniteMags);
-            Page.CreateBool("Midas Touch", Color.green, MidasTouch.Value, OnGoldMags);
+            Page.CreateBool("Infinte Ammo", ToolTheme, InfiniteAmmoEnabled.Value, OnGiveAmmoWhenEmpty);
+            Page.CreateBool("Auto Chamber", ToolTheme, AutoChamber.Value, OnAutoChamber);
+            Page.CreateBool("Auto Load Guns", ToolTheme, InfiniteAmmoEnabled.Value, OnAutoLoad);
+            Page.CreateBool("Auto Refill", ToolTheme, InfMags.Value, OnInfiniteMags);
+            Page.CreateBool("Eject Refill", ToolTheme, EjectRefill.Value, OnEjectRefill);
+            Page.CreateBool("Midas Touch", ToolTheme, MidasTouch.Value, OnGoldMags);
+
         }
 
         private static void OnGoldMags(bool obj) {
             MidasTouch.Value = obj;
 Main.Save();
+        }
+
+        private static void OnEjectRefill(bool obj) {
+            EjectRefill.Value = obj;
+            Main.Save();
         }
 
         public override void OnSetEnabled(bool value) {
@@ -67,7 +80,7 @@ Main.Save();
         }
 
         private static void OnGiveAmmoWhenEmpty(bool value) {
-            GiveAmmoWhenEmpty.Value = value;
+            InfiniteAmmoEnabled.Value = value;
 Main.Save();
         }
 
@@ -111,7 +124,7 @@ Main.Save();
             public static class AmmoCheckPatch {
                 [HarmonyPrefix]
                 public static void Prefix() {
-                    if (Enabled && GiveAmmoWhenEmpty.Value) {
+                    if (Enabled && InfiniteAmmoEnabled.Value) {
                         var light = AmmoInventory.Instance.GetCartridgeCount("light");
                         if (light <= 0) {
                             Bankruptcy(AmmoInventory.Instance.lightAmmoGroup);
@@ -150,7 +163,7 @@ Main.Save();
                 }
 
                 private static void MagMax(Magazine mag) {
-                    if (GiveAmmoWhenEmpty.Value) {
+                    if (InfiniteAmmoEnabled.Value) {
                         int magMax = mag.magazineState.magazineData.rounds;
                         int cartridgeCount = AmmoInventory.Instance.GetCartridgeCount(mag.magazineState.cartridgeData);
                         if (cartridgeCount < magMax) {
@@ -206,6 +219,18 @@ Main.Save();
                 }
 
             }
+
+            [HarmonyPatch(typeof(Magazine), nameof(Magazine.OnEject))]
+            public static class Withdraw {
+                [HarmonyPostfix]
+                public static void Postfix(Magazine __instance) {
+                    if (Enabled && EjectRefill.Value) {
+                        __instance.magazineState.Refill();
+                    }
+                }
+
+            }
+
 
             [HarmonyPatch(typeof(Gun), nameof(Gun.AmmoCount))]
             public static class ShotgunCreditCard {

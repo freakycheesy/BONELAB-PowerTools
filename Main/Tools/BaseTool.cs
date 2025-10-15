@@ -11,6 +11,9 @@ namespace PowerTools.Tools {
         public abstract string ToolName {
             get;
         }
+        public abstract Color ToolTheme {
+            get;
+        }
         public virtual void Start() {
             if (started)
                 return;
@@ -25,8 +28,8 @@ namespace PowerTools.Tools {
         }
 
         public virtual void BoneMenuCreator() {
-            Page = Main.MainPage.CreatePage(ToolName, Color.green);
-            Page.CreateBool("Enabled", Color.green, ToolEnabled.Value, (a) => ToolEnabled.Value = a);
+            Page = Main.MainPage.CreatePage(ToolName, ToolTheme);
+            Page.CreateBool("Enabled", ToolTheme, ToolEnabled.Value, (a) => ToolEnabled.Value = a);
         }
 
         public virtual void OnSetEnabled(bool value) {

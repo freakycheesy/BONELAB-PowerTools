@@ -10,6 +10,8 @@ namespace PowerTools.Tools {
 
         public override string ToolName => "Gravity Adjuster";
 
+        public override Color ToolTheme => Color.blue;
+
         private static float _gravity = -9.81f;
         //private static float _originalGravity = -9.8f;
         public override void MelonCreator() {
@@ -26,7 +28,7 @@ namespace PowerTools.Tools {
             FloatElement one = null;
             FloatElement ten = null;
 
-            var pointOne = Page.CreateFloat("Gravity Value (0.1)", Color.green, _gravity, 0.1f, -25f, 25f, (r) => {
+            var pointOne = Page.CreateFloat("Gravity Value (0.1)", ToolTheme, _gravity, 0.1f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
     Main.Save();
                 _gravity = r;
@@ -34,7 +36,7 @@ namespace PowerTools.Tools {
                 ten.Value = r;
                 GravityAdjust();
             });
-            one = Page.CreateFloat("Gravity Value (1)", Color.green, _gravity, 1f, -25f, 25f, (r) => {
+            one = Page.CreateFloat("Gravity Value (1)", ToolTheme, _gravity, 1f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
     Main.Save();
                 pointOne.Value = r;
@@ -42,7 +44,7 @@ namespace PowerTools.Tools {
                 _gravity = r;
                 GravityAdjust();
             });
-            ten = Page.CreateFloat("Gravity Value (5)", Color.green, _gravity, 5f, -25f, 25f, (r) => {
+            ten = Page.CreateFloat("Gravity Value (5)", ToolTheme, _gravity, 5f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
     Main.Save();
                 pointOne.Value = r;

@@ -15,7 +15,7 @@ namespace PowerTools.Tools {
 
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page.CreateBool("Disable Next Level Button", Color.green, EndOfLevelButton.Value, OnEndOfLevelButtonEnabled);
+            Page.CreateBool("Disable Next Level Button", ToolTheme, EndOfLevelButton.Value, OnEndOfLevelButtonEnabled);
         }
 
         public override void OnSetEnabled(bool value) {
@@ -34,8 +34,10 @@ namespace PowerTools.Tools {
             get => "Button Disabler";
         }
 
+        public override Color ToolTheme => Color.red + (Color.yellow / 2);
+
         public void DisableButtons() {
-            var objectsWithKeyword = UnityEngine.Object.FindObjectsOfType<Transform>(true);
+            var objectsWithKeyword = Object.FindObjectsOfType<Transform>(true);
             foreach (Transform obj in objectsWithKeyword) {
                 if (obj.name.Contains("FLOORS") || obj.name.Contains("LoadButtons") || obj.name.Contains("prop_bigButton") || obj.name.Contains("INTERACTION")) {
 

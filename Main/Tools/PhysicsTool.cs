@@ -13,13 +13,15 @@ namespace PowerTools.Tools {
 
         public override string ToolName => "Physics Tool";
 
+        public override Color ToolTheme => Color.green;
+
         public override void MelonCreator() {
             base.MelonCreator();
             ForcePullAnything = Main.Preferences.CreateEntry("ForcePullAnything", false);
         }
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page.CreateBool("Force Pull Anything (Cannot Reverse)", Color.green, ForcePullAnything.Value, (a) => {
+            Page.CreateBool("Force Pull Anything (Cannot Reverse)", ToolTheme, ForcePullAnything.Value, (a) => {
                 ForcePullAnything.Value = a;
                 foreach (var grip in Resources.FindObjectsOfTypeAll<Grip>()) {
                     GripPatch.AddForcePull(grip);

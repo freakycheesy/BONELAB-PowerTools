@@ -1,17 +1,24 @@
 ﻿using BoneLib;
 using BoneLib.BoneMenu;
 using HarmonyLib;
+using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Combat;
+using Il2CppSLZ.Marrow.SceneStreaming;
 using MelonLoader;
 using System;
 using UnityEngine;
 
 namespace PowerTools.Tools {
+    public enum Bool : byte {
+        Default = 0,
+        True,
+        False,
+    }
     public class HealthSettings : BaseTool {
         public static MelonPreferences_Entry<bool> GodMode;
         public static MelonPreferences_Entry<bool> RagdollOnDeath;
-        public static MelonPreferences_Entry<bool> ReloadLevel;
+        public static MelonPreferences_Entry<Bool> ReloadLevel;
         public static MelonPreferences_Entry<float> DeathTime;
         public override void Start() {
             base.Start();
@@ -37,33 +44,49 @@ namespace PowerTools.Tools {
             base.MelonCreator();
             GodMode = Main.Preferences.CreateEntry("God Mode", false);
             RagdollOnDeath = Main.Preferences.CreateEntry("Ragdoll On Death", false);
-            ReloadLevel = Main.Preferences.CreateEntry("ReloadLevel", false);
+            ReloadLevel = Main.Preferences.CreateEntry("ReloadLevel", Bool.Default);
             DeathTime = Main.Preferences.CreateEntry("Damage Threshold", 3f);
         }
 
         public override void BoneMenuCreator() {
             base.BoneMenuCreator();
-            Page.CreateBool("God Mode", Color.green, GodMode.Value, (a) => {
+            Page.CreateBool("God Mode", ToolTheme, GodMode.Value, (a) => {
                 GodMode.Value = a;
                 Main.Save();
             });
-            Page.CreateBool("Ragdoll On Death", Color.green, RagdollOnDeath.Value, (a) => {
+            Page.CreateBool("Ragdoll On Death", ToolTheme, RagdollOnDeath.Value, (a) => {
                 RagdollOnDeath.Value = a;
                 PlayerHealth._testRagdollOnDeath = RagdollOnDeath.Value;
                 Main.Save();
             });
-            Page.CreateBool("Reload Level On Death", Color.green, ReloadLevel.Value, (a) => {
-                ReloadLevel.Value = a;
-                PlayerHealth.reloadLevelOnDeath = ReloadLevel.Value;
+            Page.CreateEnum("Reload Level On Death", ToolTheme, ReloadLevel.Value, (a) => {
+                ReloadLevel.Value = (Bool)a;
+                EditReloadOnDeath(a);
                 Main.Save();
-                });
-            Page.CreateFloat("Death Time", Color.green, DeathTime.Value, 10f, 0f, 100f, (dt) => {
+            });
+            Page.CreateFloat("Death Time", ToolTheme, DeathTime.Value, 10f, 0f, 100f, (dt) => {
                 DeathTime.Value = dt;
                 PlayerHealth.deathTimeAmount = DeathTime.Value;
                 Main.Save();
             });
-            Page.CreateFunction("Die", Color.green, OnDie);
-            Page.CreateFunction("Refill Health", Color.green, SetFullHealth);
+            Page.CreateFunction("Die", ToolTheme, OnDie);
+            Page.CreateFunction("Refill Health", ToolTheme, SetFullHealth);
+        }
+
+        public static void EditReloadOnDeath(Enum a) {
+            switch (a) {
+                case Bool.True:
+                    PlayerHealth.reloadLevelOnDeath = true;
+                    break;
+                case Bool.False:
+                    PlayerHealth.reloadLevelOnDeath = true;
+                    break;
+                case Bool.Default:
+                    var decorator = UnityEngine.Object.FindObjectOfType<PlayerHealthDecorator>();
+                    if (decorator)
+                        PlayerHealth.reloadLevelOnDeath = decorator._reloadLevelOnDeath;
+                    break;
+            }
         }
 
         public static void SetFullHealth() {
@@ -102,6 +125,8 @@ namespace PowerTools.Tools {
 
         public override string ToolName => "Health Settings";
 
+        public override Color ToolTheme => Color.green + Color.yellow;
+
         private static void OnDie() {
             PlayerHealth?.Dying(100);
             PlayerHealth?.Death();
@@ -110,7 +135,7 @@ namespace PowerTools.Tools {
 
         public override void Reset() {
             base.Reset();
-            PlayerHealth.reloadLevelOnDeath = ReloadLevel.Value;
+            EditReloadOnDeath(ReloadLevel.Value);
             PlayerHealth.deathTimeAmount = DeathTime.Value;
         }
     }
