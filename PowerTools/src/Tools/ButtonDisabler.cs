@@ -1,6 +1,7 @@
 ﻿using Il2CppSLZ.Interaction;
 using MelonLoader;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PowerTools.Tools {
     public class ButtonDisabler : BaseTool {

@@ -1,44 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0DEB755F-D57A-4285-9D70-C592E340CDB4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>PowerTools</RootNamespace>
-    <AssemblyName>PowerTools</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="BoneLib">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<RootNamespace>PowerTools</RootNamespace>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyName>PowerTools</AssemblyName>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+	  <EmbeddedResource Remove="OldTools - Copy\**" />
+	  <EmbeddedResource Remove="Properties - Copy\**" />
+	  <EmbeddedResource Remove="src\OldTools\**" />
+	  <EmbeddedResource Remove="Templates - Copy\**" />
+	  <EmbeddedResource Remove="Tools - Copy\**" />
+	  <None Remove="OldTools - Copy\**" />
+	  <None Remove="Properties - Copy\**" />
+	  <None Remove="src\OldTools\**" />
+	  <None Remove="Templates - Copy\**" />
+	  <None Remove="Tools - Copy\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		 <Reference Include="BoneLib">
       <HintPath>$(BONELAB_DIR)\Mods\BoneLib.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
@@ -228,11 +217,7 @@
       <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Il2Cpp__Generated.dll</HintPath>
     </Reference>
     <Reference Include="LabFusion">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\BONELAB\Mods\LabFusion.dll</HintPath>
-    </Reference>
-    <Reference Include="Tomlet, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\BONELAB\MelonLoader\net6\Tomlet.dll</HintPath>
+      <HintPath>$(BONELAB_DIR)\Mods\LabFusion.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Addressables">
       <HintPath>$(BONELAB_DIR)\MelonLoader\Il2CppAssemblies\Unity.Addressables.dll</HintPath>
@@ -555,38 +540,33 @@
     <Reference Include="Il2CppInterop.Common">
       <HintPath>$(BONELAB_DIR)\MelonLoader\net6\Il2CppInterop.Common.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Gifs\auto load mags.gif" />
-    <Content Include="Gifs\Button Disabler.gif" />
-    <Content Include="Gifs\Death time customizer.gif" />
-    <Content Include="Gifs\Gravity adjuster.gif" />
-    <Content Include="Gifs\inf ammo.gif" />
-    <Content Include="Gifs\ragdoll legs.gif" />
-    <Content Include="Gifs\Ragdoll On Death.gif" />
-    <Content Include="Gifs\Reload On Death.gif" />
-    <Content Include="Gifs\Vaulting toggle.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BuildInfo.cs" />
-    <Compile Include="Main.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Templates\ToolTemplate.cs" />
-    <Compile Include="ToolLoader.cs" />
-    <Compile Include="Tools\BaseTool.cs" />
-    <Compile Include="Tools\ButtonDisabler.cs" />
-    <Compile Include="Tools\RagdollLegs.cs" />
-    <Compile Include="Tools\GravityAdjuster.cs" />
-    <Compile Include="Tools\InfiniteAmmo.cs" />
-    <Compile Include="Tools\PhysicsTool.cs" />
-    <Compile Include="Tools\HealthSettings.cs" />
-    <Compile Include="Tools\AchievementTool.cs" />
-    <Compile Include="Tools\VaultingToggle.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\freakycheesy.powertools\Mods\&quot;" />
-    <Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\&quot;" />
-  </Target>
+	</ItemGroup>
+
+	<PropertyGroup>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="BuildInfo.cs" />
+		<Compile Include="Main.cs" />
+		<Compile Include="src\Extensions.cs" />
+		<Compile Include="src\Properties\AssemblyInfo.cs" />
+		<Compile Include="src\Templates\ToolTemplate.cs" />
+		<Compile Include="src\Tools\AchievementTool.cs" />
+		<Compile Include="src\Tools\BaseTool.cs" />
+		<Compile Include="src\Tools\ButtonDisabler.cs" />
+		<Compile Include="src\Tools\GravityAdjuster.cs" />
+		<Compile Include="src\Tools\HealthSettings.cs" />
+		<Compile Include="src\Tools\InfiniteAmmo.cs" />
+		<Compile Include="src\Tools\PhysicsTool.cs" />
+		<Compile Include="src\Tools\RagdollLegs.cs" />
+		<Compile Include="src\Tools\VaultingToggle.cs" />
+		<Compile Include="ToolLoader.cs" />
+	</ItemGroup>
+	
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\freakycheesy.powertools\Mods\&quot;" />
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(BONELAB_DIR)\Mods\&quot;" />
+	</Target>
 </Project>

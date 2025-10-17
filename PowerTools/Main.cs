@@ -11,13 +11,14 @@ namespace PowerTools
 {
     public partial class Main : MelonMod
     {
+        public static bool CanUseSteamworks => FindMelon("LabFusion", "Lakatrazz") != null && !Application.isMobilePlatform;
         public static Page MainPage;
         public static Action OnUpdateEvent; 
         public static Action OnFixedUpdateEvent;
         public static Action OnGUIEvent;
         public static MelonPreferences_Category Preferences { get; private set; }
         public override void OnInitializeMelon() {
-            if (FindMelon("LabFusion", "Lakatrazz") == null && !Application.isMobilePlatform) {
+            if (!CanUseSteamworks) {
                 MelonLogger.Error("BONELAB FUSION NEEDED FOR STEAMWORKS SINCE IM LAZY AF TO PORT IT ");
             }
             Preferences = MelonPreferences.CreateCategory("PowerTools", "Power Tools");
@@ -65,9 +66,6 @@ namespace PowerTools
         }
 
         public static void Save() {
-            foreach (var entry in Preferences.Entries) {
-                entry.Save();
-            }
             Preferences.SaveToFile();
             MelonPreferences.Save();
         }
