@@ -17,6 +17,9 @@ namespace PowerTools
         public static Action OnGUIEvent;
         public static MelonPreferences_Category Preferences { get; private set; }
         public override void OnInitializeMelon() {
+            if (FindMelon("LabFusion", "Lakatrazz") == null && !Application.isMobilePlatform) {
+                MelonLogger.Error("BONELAB FUSION NEEDED FOR STEAMWORKS SINCE IM LAZY AF TO PORT IT ");
+            }
             Preferences = MelonPreferences.CreateCategory("PowerTools", "Power Tools");
             Preferences.SetFilePath("UserData/freakycheesy.cfg");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
@@ -41,6 +44,7 @@ namespace PowerTools
         }
 
         public static BaseTool[] defaultMods = new BaseTool[] { new ButtonDisabler(),
+            new AchievementTool(),
             new HealthSettings(),
             new GravityAdjuster(),
             new InfiniteAmmo(),

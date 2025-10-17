@@ -30,7 +30,6 @@ namespace PowerTools.Tools {
 
             var pointOne = Page.CreateFloat("Gravity Value (0.1)", ToolTheme, _gravity, 0.1f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
-    Main.Save();
                 _gravity = r;
                 one.Value = r;
                 ten.Value = r;
@@ -38,7 +37,6 @@ namespace PowerTools.Tools {
             });
             one = Page.CreateFloat("Gravity Value (1)", ToolTheme, _gravity, 1f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
-    Main.Save();
                 pointOne.Value = r;
                 ten.Value = r;
                 _gravity = r;
@@ -46,7 +44,6 @@ namespace PowerTools.Tools {
             });
             ten = Page.CreateFloat("Gravity Value (5)", ToolTheme, _gravity, 5f, -25f, 25f, (r) => {
                 MelonPrefGravityValue.Value = r;
-    Main.Save();
                 pointOne.Value = r;
                 one.Value = r;
                 _gravity = r;
@@ -77,6 +74,7 @@ Main.Save();
             if (ToolEnabled.Value) {
                 Physics.gravity = new Vector3(0, _gravity, 0);
             }
+            Main.Save();
         }
     }
 }

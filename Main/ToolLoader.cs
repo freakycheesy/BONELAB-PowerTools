@@ -20,20 +20,6 @@ namespace PowerTools {
                 tool.Start();
             }
         }
-        public static void LoadTools(Assembly assembly) {
-            var types = assembly.GetTypes();
-            List<Type> foundtools = new List<Type>();
-            foreach (var type in types) {
-                if (type == typeof(BaseTool)) {
-                    foundtools.Add(type);
-                }
-            }
-            List<BaseTool> loadedtools = new List<BaseTool>();
-            foreach (var type in foundtools) {
-                loadedtools.Add((BaseTool)assembly.CreateInstance(type.FullName));
-            }
-            LoadTools(loadedtools);
-        }
         public static void LoadTools(IEnumerable<BaseTool> tools) {
             loadedTools.AddRange(tools);
             foreach (var tool in tools) {
