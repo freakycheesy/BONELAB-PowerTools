@@ -13,18 +13,6 @@
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-	<ItemGroup>
-	  <EmbeddedResource Remove="OldTools - Copy\**" />
-	  <EmbeddedResource Remove="Properties - Copy\**" />
-	  <EmbeddedResource Remove="src\OldTools\**" />
-	  <EmbeddedResource Remove="Templates - Copy\**" />
-	  <EmbeddedResource Remove="Tools - Copy\**" />
-	  <None Remove="OldTools - Copy\**" />
-	  <None Remove="Properties - Copy\**" />
-	  <None Remove="src\OldTools\**" />
-	  <None Remove="Templates - Copy\**" />
-	  <None Remove="Tools - Copy\**" />
-	</ItemGroup>
 
 	<ItemGroup>
 		 <Reference Include="BoneLib">
@@ -545,6 +533,15 @@
 	<PropertyGroup>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -563,6 +560,10 @@
 		<Compile Include="src\Tools\RagdollLegs.cs" />
 		<Compile Include="src\Tools\VaultingToggle.cs" />
 		<Compile Include="ToolLoader.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="icon.ico" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

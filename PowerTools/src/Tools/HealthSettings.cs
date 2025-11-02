@@ -22,11 +22,13 @@ namespace PowerTools.Tools {
         public static MelonPreferences_Entry<float> DeathTime;
         public override void Start() {
             base.Start();
+            Hooking.OnLevelLoaded += (_) => EditReloadOnDeath(ReloadLevel.Value);
         }
         private static void Hooking_OnPlayerDamageRecieved(float obj) {
             MelonLogger.Msg("Damage Recieved");
-            if (GodMode.Value) PlayerHealth.SetFullHealth();
-            if (RagdollOnDeath.Value && PlayerHealth.curr_Health <= 0)
+            EditReloadOnDeath(ReloadLevel.Value);
+            if (GodMode.Value) SetFullHealth();
+            else if (RagdollOnDeath.Value && PlayerHealth.curr_Health <= 0)
                 Ragdoll();
         }
 
@@ -64,7 +66,7 @@ namespace PowerTools.Tools {
                 EditReloadOnDeath(a);
                 Main.Save();
             });
-            Page.CreateFloat("Death Time", ToolTheme, DeathTime.Value, 10f, 0f, 100f, (dt) => {
+            Page.CreateFloat("Death Time", ToolTheme, DeathTime.Value, 1f, 0f, 30f, (dt) => {
                 DeathTime.Value = dt;
                 PlayerHealth.deathTimeAmount = DeathTime.Value;
                 Main.Save();
@@ -74,12 +76,14 @@ namespace PowerTools.Tools {
         }
 
         public static void EditReloadOnDeath(Enum a) {
+            if (!PlayerHealth)
+                return;
             switch (a) {
                 case Bool.True:
                     PlayerHealth.reloadLevelOnDeath = true;
                     break;
                 case Bool.False:
-                    PlayerHealth.reloadLevelOnDeath = true;
+                    PlayerHealth.reloadLevelOnDeath = false;
                     break;
                 case Bool.Default:
                     var decorator = UnityEngine.Object.FindObjectOfType<PlayerHealthDecorator>();
@@ -101,16 +105,17 @@ namespace PowerTools.Tools {
                 Unragdoll();
             }
 
-            [HarmonyPatch(nameof(Health.Death)), HarmonyPostfix]
+            [HarmonyPatch(nameof(Health.Death)), HarmonyPrefix]
             public static void Death() {
                 MelonLogger.Msg("Death");
                 if (RagdollOnDeath.Value)
                     Ragdoll();
             }
 
-            [HarmonyPatch(nameof(Player_Health.TAKEDAMAGE)), HarmonyPostfix]
-            public static void TAKEDAMAGE(float damage) {
+            [HarmonyPatch(nameof(Player_Health.TAKEDAMAGE)), HarmonyPrefix]
+            public static void TAKEDAMAGE(Player_Health __instance, float damage) {
                 Hooking_OnPlayerDamageRecieved(damage);
+                MelonLogger.Msg($"{__instance._rigManager.name} was damaged");
             }
         }
 
@@ -128,6 +133,7 @@ namespace PowerTools.Tools {
         public override Color ToolTheme => Color.green + Color.yellow;
 
         private static void OnDie() {
+            EditReloadOnDeath(ReloadLevel.Value);
             PlayerHealth?.Dying(100);
             PlayerHealth?.Death();
             PlayerHealth?.Respawn();
