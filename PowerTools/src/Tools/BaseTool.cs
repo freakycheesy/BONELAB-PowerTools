@@ -8,6 +8,9 @@ namespace PowerTools.Tools {
         public Page Page;
         public MelonPreferences_Entry<bool> ToolEnabled;
         public bool started;
+        public abstract bool HaveEnableToggle {
+            get;
+        }
         public abstract string ToolName {
             get;
         }
@@ -29,7 +32,7 @@ namespace PowerTools.Tools {
 
         public virtual void BoneMenuCreator() {
             Page = Main.MainPage.CreatePage(ToolName, ToolTheme);
-            Page.CreateBool("Enabled", ToolTheme, ToolEnabled.Value, (a) => ToolEnabled.Value = a);
+            if(HaveEnableToggle)Page.CreateBool("Enabled", ToolTheme, ToolEnabled.Value, (a) => ToolEnabled.Value = a);
         }
 
         public virtual void OnSetEnabled(bool value) {

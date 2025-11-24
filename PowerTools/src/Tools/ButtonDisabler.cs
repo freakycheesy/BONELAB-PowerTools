@@ -37,6 +37,8 @@ namespace PowerTools.Tools {
 
         public override Color ToolTheme => Color.red + (Color.yellow / 2);
 
+        public override bool HaveEnableToggle => false;
+
         public void DisableButtons() {
             var objectsWithKeyword = Object.FindObjectsOfType<Transform>(true);
             foreach (Transform obj in objectsWithKeyword) {

@@ -130,7 +130,9 @@ namespace PowerTools.Tools {
 
         public override string ToolName => "Health Settings";
 
-        public override Color ToolTheme => Color.green + Color.yellow;
+        public override Color ToolTheme => Color.red;
+
+        public override bool HaveEnableToggle => false;
 
         private static void OnDie() {
             EditReloadOnDeath(ReloadLevel.Value);

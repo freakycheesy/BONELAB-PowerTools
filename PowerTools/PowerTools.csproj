@@ -553,13 +553,13 @@
 		<Compile Include="src\Tools\AchievementTool.cs" />
 		<Compile Include="src\Tools\BaseTool.cs" />
 		<Compile Include="src\Tools\ButtonDisabler.cs" />
-		<Compile Include="src\Tools\GravityAdjuster.cs" />
 		<Compile Include="src\Tools\HealthSettings.cs" />
 		<Compile Include="src\Tools\InfiniteAmmo.cs" />
 		<Compile Include="src\Tools\PhysicsTool.cs" />
 		<Compile Include="src\Tools\RagdollLegs.cs" />
 		<Compile Include="src\Tools\VaultingToggle.cs" />
 		<Compile Include="ToolLoader.cs" />
+		<Compile Include="Utils.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

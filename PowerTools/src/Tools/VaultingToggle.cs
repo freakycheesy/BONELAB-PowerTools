@@ -14,6 +14,8 @@ namespace PowerTools.Tools {
 
         public override Color ToolTheme => Color.magenta;
 
+        public override bool HaveEnableToggle => true;
+
         public static VaultingToggle instance;
         public override void Start() {
             base.Start();

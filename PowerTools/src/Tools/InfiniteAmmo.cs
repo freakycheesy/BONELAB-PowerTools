@@ -39,6 +39,8 @@ namespace PowerTools.Tools {
 
         public override Color ToolTheme => Color.yellow;
 
+        public override bool HaveEnableToggle => true;
+
         public override void Start() {
             base.Start();
             Instance = this;

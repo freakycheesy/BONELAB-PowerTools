@@ -15,6 +15,8 @@ namespace PowerTools.Tools {
 
         public override Color ToolTheme => Color.green;
 
+        public override bool HaveEnableToggle => false;
+
         public override void MelonCreator() {
             base.MelonCreator();
             ForcePullAnything = Main.Preferences.CreateEntry("ForcePullAnything", false);

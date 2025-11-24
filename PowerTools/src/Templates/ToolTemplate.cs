@@ -1,12 +1,10 @@
-﻿using BoneLib.BoneMenu;
-using MelonLoader;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PowerTools.Tools {
-    public class ToolTemplate : BaseTool {
-        public override string ToolName => throw new System.NotImplementedException();
+    public abstract class ToolTemplate : BaseTool {
+        public override string ToolName => "";
 
-        public override Color ToolTheme => throw new System.NotImplementedException();
+        public override Color ToolTheme => Color.green;
 
         public override void Start() {
             base.Start();

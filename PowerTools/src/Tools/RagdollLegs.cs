@@ -21,5 +21,7 @@ namespace PowerTools.Tools {
         public override string ToolName => "Ragdoll Legs";
 
         public override Color ToolTheme => Color.cyan;
+
+        public override bool HaveEnableToggle => true;
     }
 }

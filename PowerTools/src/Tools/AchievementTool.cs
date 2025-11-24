@@ -2,17 +2,17 @@
 using BoneLib.Notifications;
 using Il2CppOculus.Platform;
 using LabFusion.Extensions;
+using MelonLoader;
 using Steamworks;
 using UnityEngine;
 
 namespace PowerTools.Tools {
-    public enum Platform : byte {
-        Steam,
-        Oculus,
-    }
     public class AchievementTool : BaseTool {
         public override string ToolName => "Achievement Tool";
         public override Color ToolTheme => Color.red + Color.yellow;
+
+        public override bool HaveEnableToggle => false;
+
         public static Page AchievementsPage;
         public static Action InitiatedSteam;
 
