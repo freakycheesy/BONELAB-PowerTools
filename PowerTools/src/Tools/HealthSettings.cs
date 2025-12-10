@@ -5,6 +5,7 @@ using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Combat;
 using Il2CppSLZ.Marrow.SceneStreaming;
+using LabFusion.SDK.Gamemodes;
 using MelonLoader;
 using System;
 using UnityEngine;
@@ -94,6 +95,8 @@ namespace PowerTools.Tools {
         }
 
         public static void SetFullHealth() {
+            if (GamemodeManager.IsGamemodeStarted)
+                return;
             PlayerHealth?.SetFullHealth();
         }
 
@@ -102,11 +105,13 @@ namespace PowerTools.Tools {
             [HarmonyPatch(nameof(Health.SetFullHealth)), HarmonyPrefix]
             public static void Respawn() {
                 MelonLogger.Msg("Respawn");
+                Hooking_OnPlayerDamageRecieved(0);
                 Unragdoll();
             }
 
             [HarmonyPatch(nameof(Health.Death)), HarmonyPrefix]
             public static void Death() {
+                Hooking_OnPlayerDamageRecieved(0);
                 MelonLogger.Msg("Death");
                 if (RagdollOnDeath.Value)
                     Ragdoll();

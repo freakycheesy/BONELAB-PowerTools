@@ -20,11 +20,28 @@ namespace PowerTools
             if (!CanUseSteamworks) {
                 MelonLogger.Error("BONELAB FUSION NEEDED FOR STEAMWORKS SINCE IM LAZY AF TO PORT IT ");
             }
+            if (!GameSafe()) {
+                return;
+            }
             Preferences = MelonPreferences.CreateCategory("PowerTools", "Power Tools");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
             Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
             Hooking.OnLevelUnloaded += Save;
             ToolLoader.LoadTools();
+        }
+
+        private bool GameSafe() {
+            Dictionary<KeyValuePair<string, string>, string> BADMODS = new();
+            BADMODS.Add(new("Fusion Protector", "James Reborn"), "Fusion Protector is a Fusion Backdoor made by a controversial/non trustworthy figure in the bonelab community who caused tons of drama by making a cheat client");
+            foreach (var mod in BADMODS) {
+                if (FindMelon(mod.Key.Key, mod.Key.Value) != null) {
+                    MelonLogger.Error($"BAD MOD FOUND,\n UNINSTALL IT FAST IN YOUR MODS FOLDER ON PC\nMELONLOADER-STRESSLEVELZERO-BONELAB-MODS ON QUEST!!!\n[Mod:{mod.Key.ToString()}] [Reason:{mod.Value}]");
+                    Environment.Exit(0);
+                    Application.Quit();
+                    return false;
+                }
+            }
+            return true;
         }
 
         public override void OnUpdate() {
