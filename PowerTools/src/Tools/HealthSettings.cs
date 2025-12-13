@@ -105,7 +105,6 @@ namespace PowerTools.Tools {
             [HarmonyPatch(nameof(Health.SetFullHealth)), HarmonyPrefix]
             public static void Respawn() {
                 MelonLogger.Msg("Respawn");
-                Hooking_OnPlayerDamageRecieved(0);
                 Unragdoll();
             }
 
