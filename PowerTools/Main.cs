@@ -27,7 +27,7 @@ namespace PowerTools
 #endif
             Preferences = MelonPreferences.CreateCategory("PowerTools", "Power Tools");
             MainPage = Page.Root.CreatePage(ModName, Color.white);
-            Hooking.OnLevelLoaded += (_) => { OnSceneAwake(); };
+            Hooking.OnLevelLoaded += (_) => { Save(); };
             Hooking.OnLevelUnloaded += Save;
             ToolLoader.LoadTools();
         }
